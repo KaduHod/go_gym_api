@@ -2,16 +2,23 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
 
 	"github.com/go-sql-driver/mysql"
 )
 func ConnetionMysql() *sql.DB {
+    host := os.Getenv("DATABASE_HOST")
+    pwd := os.Getenv("DATABASE_PASSWORD")
+    port := os.Getenv("DATABASE_PORT")
+    dbname := os.Getenv("DATABASE_NAME")
+    user := os.Getenv("DATABASE_USER")
     config := mysql.Config{
-        User: "root",
-        Passwd: "123456",
+        User: user,
+        Passwd: pwd,
         Net:  "tcp",
-        Addr: "localhost:3306",
-        DBName: "gymapp2",
+        Addr: fmt.Sprintf("%s:%s", host, port),
+        DBName: dbname,
     }
     db, err := sql.Open("mysql", config.FormatDSN())
     if err != nil {
