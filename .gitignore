@@ -1,2 +1,100 @@
-./tmp/
-./.env                  # Variáveis de ambiente
+# --- 🚀 Geral ---
+.DS_Store             # Mac
+.thumbs.db            # Windows
+desktop.ini           # Windows
+*.swp                 # Vim
+*.swo                 # Vim
+*~                    # Backup files
+.env                  # Variáveis de ambiente
+.env.local            # Overrides locais
+.env*.local           # Outros overrides
+.idea/                # JetBrains IDEs (IntelliJ, Goland, etc.)
+.vscode/              # VS Code
+*.suo                 # Visual Studio
+*.user                # Visual Studio
+*.log                 # Logs
+npm-debug.log*        # NPM logs
+yarn-debug.log*       # Yarn logs
+yarn-error.log*       # Yarn errors
+
+# --- 📁 Diretórios ---
+/node_modules/        # Node.js
+/dist/                # Builds (React, Vue, etc.)
+/build/               # Builds (Java, Go binaries)
+/bin/                 # Binários (Go, scripts)
+/out/                 # Output (TypeScript, etc.)
+/tmp/                 # Arquivos temporários
+/.cache/              # Cache (Babel, etc.)
+/.next/               # Next.js
+/.serverless/         # Serverless Framework
+/.venv/               # Python virtualenv
+/venv/                # Python virtualenv (alternativo)
+__pycache__/          # Python cache
+*.py[cod]             # Python bytecode
+
+# --- 🔥 Linguagens Específicas ---
+
+### 🔹 Go
+/go.sum               # Go dependencies checksum
+/go.mod               # Go mod (pode querer versionar, mas ignore se não for o caso)
+*.exe                 # Executáveis do Go
+*.test                # Binários de teste
+*.prof                # Profiles
+
+### 🔹 Python
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+*.egg
+.Python
+
+### 🔹 JavaScript/TypeScript
+*.tsbuildinfo         # TypeScript build info
+.cache/               # Parcel, Gatsby, etc.
+.eslintcache          # ESLint cache
+.jest/                # Jest cache
+.next/                # Next.js
+.nuxt/                # Nuxt.js
+.serverless/          # Serverless
+.vercel/              # Vercel
+.yarn/cache           # Yarn 2+ cache
+.yarn/unplugged       # Yarn 2+ unplugged
+.yarn/build-state.yml # Yarn 2+ build state
+.yarn/install-state.gz # Yarn 2+ install state
+.pnp.*                # Yarn PnP
+
+### 🔹 Java
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+hs_err_pid*           # JVM crash logs
+
+### 🔹 Rust
+/target/              # Rust build output
+Cargo.lock            # Dependências (pode querer versionar em libs)
+
+### 🔹 Docker
+docker-compose.override.yml  # Overrides locais
+*.dockerignore        # Ignorar o próprio .dockerignore (se necessário)
+
+# --- 🛠️ Ferramentas ---
+.terraform/           # Terraform
+*.tfstate             # Estado do Terraform
+*.tfstate.backup      # Backup do estado
+*.tfvars              # Variáveis do Terraform
+.terraform.lock.hcl   # Lock do Terraform
+
+# --- 📦 Databases ---
+*.sqlite              # SQLite
+*.sqlite3             # SQLite3
+*.dump                # Database dumps
+
+# --- 🎨 Design (Figma, Adobe) ---
+*.sketch
+*.xd
+*.fig
+*.ai
+*.psd
