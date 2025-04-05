@@ -1,2 +1,2 @@
-tmp/
-.env
+./tmp/
+./.env                  # Variáveis de ambiente
