@@ -3,10 +3,8 @@ package main
 import (
 	"KaduHod/muscles_api/src/controllers"
 	"KaduHod/muscles_api/src/database"
-	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -16,15 +14,16 @@ func main() {
         log.Fatal(err)
     }
     db := database.ConnetionMysql()
-    fmt.Println(os.Getenv("DATABASE_HOST"))
     defer db.Close()
     controller := controllers.Controller{
         Db: db,
     }
-    muscleController := controllers.MusclesController{ controller }
-
-    http.HandleFunc("/api/v1/muscles/groups", muscleController.ListMuscleGroups)
-    http.HandleFunc("/api/v1/muscles/portions", muscleController.ListMusclePortions)
-    http.HandleFunc("/api/v1/muscles", muscleController.ListMuscles)
+    musculoSkeletalController := controllers.MusculoSkeletalController{ controller }
+    http.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
+    http.HandleFunc("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
+    http.HandleFunc("/api/v1/muscles", musculoSkeletalController.ListMuscles)
+    http.HandleFunc("/api/v1/joints", musculoSkeletalController.ListJoints)
+    http.HandleFunc("/api/v1/moviments", musculoSkeletalController.ListMoviments)
+    http.HandleFunc("/api/v1/musculoSkeletalSystem", musculoSkeletalController.ListAmm)
     http.ListenAndServe(":3005", nil)
 }
