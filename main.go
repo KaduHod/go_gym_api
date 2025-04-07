@@ -26,11 +26,12 @@ func main() {
         MovimentService: &movimentService,
         JointService: &jointService,
     }
-    http.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
-    http.HandleFunc("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
-    http.HandleFunc("/api/v1/muscles", musculoSkeletalController.ListMuscles)
-    http.HandleFunc("/api/v1/joints", musculoSkeletalController.ListJoints)
-    http.HandleFunc("/api/v1/moviments", musculoSkeletalController.ListMoviments)
-    http.HandleFunc("/api/v1/musculoSkeletalSystem", musculoSkeletalController.ListAmm)
-    http.ListenAndServe(":3005", nil)
+    server := http.NewServeMux()
+    server.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
+    server.HandleFunc("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
+    server.HandleFunc("/api/v1/muscles", musculoSkeletalController.ListMuscles)
+    server.HandleFunc("/api/v1/joints", musculoSkeletalController.ListJoints)
+    server.HandleFunc("/api/v1/moviments", musculoSkeletalController.ListMoviments)
+    server.HandleFunc("/api/v1/musculoSkeletalSystem", musculoSkeletalController.ListAmm)
+    http.ListenAndServe(":3005", server)
 }
