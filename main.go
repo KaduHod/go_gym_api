@@ -3,6 +3,7 @@ package main
 import (
 	"KaduHod/muscles_api/src/controllers"
 	"KaduHod/muscles_api/src/database"
+	"KaduHod/muscles_api/src/services"
 	"log"
 	"net/http"
 
@@ -15,10 +16,16 @@ func main() {
     }
     db := database.ConnetionMysql()
     defer db.Close()
-    controller := controllers.Controller{
-        Db: db,
+    musclesService := services.MuscleService{Db: db}
+    movimentService := services.MovimentService{Db: db}
+    jointService := services.JointService{Db: db}
+    controller := controllers.Controller{}
+    musculoSkeletalController := controllers.MusculoSkeletalController{
+        Controller: controller,
+        MuscleService: &musclesService,
+        MovimentService: &movimentService,
+        JointService: &jointService,
     }
-    musculoSkeletalController := controllers.MusculoSkeletalController{ controller }
     http.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
     http.HandleFunc("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
     http.HandleFunc("/api/v1/muscles", musculoSkeletalController.ListMuscles)
