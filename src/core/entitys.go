@@ -5,7 +5,7 @@ type MuscleMovementInfo struct {
 	MovementName      string `json:"movement_name,omitempty"`
 	JointName         string `json:"joint_name,omitempty"`
 }
-type Moviment struct {
+type Movement struct {
     Id int `json:"id,omitempty"`
     Name string `json:"name"`
 }

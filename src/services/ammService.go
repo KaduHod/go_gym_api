@@ -9,7 +9,7 @@ type AmmService struct {
 	Db *sql.DB
 }
 
-func (s *AmmService) GetAll(filters map[string]string) ([]core.MuscleMovementInfo, error) {
+func (s AmmService) GetAll(filters map[string]string) ([]core.MuscleMovementInfo, error) {
 	query := `SELECT
 		mp.name AS muscle_portion_name,
 		mg.name AS muscle_group_name,
@@ -44,7 +44,6 @@ func (s *AmmService) GetAll(filters map[string]string) ([]core.MuscleMovementInf
 	if len(queryParts) > 0 {
 		query += " WHERE " + strings.Join(queryParts, " AND ")
 	}
-
 	rows, err := s.Db.Query(query, args...)
 	if err != nil {
 		return nil, err

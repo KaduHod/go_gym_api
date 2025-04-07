@@ -1,0 +1,284 @@
+basePath: /api/v1
+definitions:
+  controllers.MetaData:
+    properties:
+      total_itens:
+        type: integer
+    type: object
+  controllers.ResponseSwegger:
+    properties:
+      data: {}
+      metadata:
+        $ref: '#/definitions/controllers.MetaData'
+      status:
+        type: string
+    type: object
+  core.Joint:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  core.Movement:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  core.MuscleGroup:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      portions:
+        items:
+          $ref: '#/definitions/core.MusclePortion'
+        type: array
+    type: object
+  core.MuscleMovementInfo:
+    properties:
+      joint_name:
+        type: string
+      movement_name:
+        type: string
+      muscle_group_name:
+        type: string
+      muscle_portion_name:
+        type: string
+    type: object
+  core.MusclePortion:
+    properties:
+      id:
+        type: integer
+      muscle_group_id:
+        type: integer
+      name:
+        type: string
+    type: object
+host: localhost:3005
+info:
+  contact: {}
+  description: API for Muscles System
+  title: Musculo Eskeletal Api
+  version: "1.0"
+paths:
+  /joints:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all joints
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/core.Joint'
+                  type: array
+                metadata:
+                  $ref: '#/definitions/controllers.MetaData'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: List all joints
+      tags:
+      - Musculoskeletal
+  /movements:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all possible movements
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/core.Movement'
+                  type: array
+                metadata:
+                  $ref: '#/definitions/controllers.MetaData'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: List all movements
+      tags:
+      - Musculoskeletal
+  /muscles:
+    get:
+      consumes:
+      - application/json
+      description: Get a hierarchical list of all muscle groups with their portions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/core.MuscleGroup'
+                  type: array
+                metadata:
+                  $ref: '#/definitions/controllers.MetaData'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: List all muscles with portions
+      tags:
+      - Musculoskeletal
+  /muscles/groups:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all muscle groups without their portions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/core.MuscleGroup'
+                  type: array
+                metadata:
+                  $ref: '#/definitions/controllers.MetaData'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: List all muscle groups
+      tags:
+      - Musculoskeletal
+  /muscles/movement-map:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all muscle-movement-joint relationships with optional
+        filtering
+      parameters:
+      - description: Filter by muscle group name
+        in: query
+        name: muscle_group
+        type: string
+      - description: Filter by muscle portion name
+        in: query
+        name: muscle_portion
+        type: string
+      - description: Filter by joint/articulation name
+        in: query
+        name: joint
+        type: string
+      - description: Filter by movement name
+        in: query
+        name: moviment
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/core.MuscleMovementInfo'
+                  type: array
+                metaData:
+                  $ref: '#/definitions/controllers.MetaData'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: List all musculoSkeletalSystem
+      tags:
+      - Musculoskeletal
+  /muscles/portions:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all muscle portions with their group IDs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/core.MusclePortion'
+                  type: array
+                metadata:
+                  $ref: '#/definitions/controllers.MetaData'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/controllers.ResponseSwegger'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: List all muscle portions
+      tags:
+      - Musculoskeletal
+swagger: "2.0"

@@ -4,11 +4,11 @@ import (
 	"KaduHod/muscles_api/src/core"
 	"database/sql"
 )
-type MovimentService struct {
+type MovementService struct {
 	Db *sql.DB
 }
 
-func (s *MovimentService) GetAll() ([]core.Moviment, error) {
+func (s *MovementService) GetAll() ([]core.Movement, error) {
 	query := "SELECT id, name FROM movements"
 	rows, err := s.Db.Query(query)
 	if err != nil {
@@ -16,9 +16,9 @@ func (s *MovimentService) GetAll() ([]core.Moviment, error) {
 	}
 	defer rows.Close()
 
-	var resources []core.Moviment
+	var resources []core.Movement
 	for rows.Next() {
-		var resource core.Moviment
+		var resource core.Movement
 		if err := rows.Scan(&resource.Id, &resource.Name); err != nil {
 			return nil, err
 		}
@@ -27,11 +27,11 @@ func (s *MovimentService) GetAll() ([]core.Moviment, error) {
 	return resources, nil
 }
 
-func (s *MovimentService) GetById(id int) (*core.Moviment, error) {
+func (s *MovementService) GetById(id int) (*core.Movement, error) {
 	query := "SELECT id, name FROM movements WHERE id = ?"
 	row := s.Db.QueryRow(query, id)
 
-	var resource core.Moviment
+	var resource core.Movement
 	if err := row.Scan(&resource.Id, &resource.Name); err != nil {
 		return nil, err
 	}
