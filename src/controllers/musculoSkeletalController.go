@@ -135,9 +135,9 @@ func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *ht
 // @Produce  json
 // @Param muscle_group query string false "Filter by muscle group name"
 // @Param muscle_portion query string false "Filter by muscle portion name"
-// @Param joint query string false "Filter by joint/articulation name"
-// @Param moviment query string false "Filter by movement name"
-// @Success 200 {object} controllers.ResponseSwegger{data=[]core.MuscleMovementInfo,metaData=controllers.MetaData}
+// @Param joint query string false "Filter by joint name"
+// @Param movement query string false "Filter by movement name"
+// @Success 200 {object} controllers.ResponseSwegger{data=[]core.MuscleMovementInfo,metadata=controllers.MetaData}
 // @Failure 500 {object} controllers.ResponseSwegger{data=string}
 // @Router /muscles/movement-map [get]
 func (self MusculoSkeletalController) ListAmm(w http.ResponseWriter, r *http.Request) {

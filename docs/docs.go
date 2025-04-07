@@ -279,14 +279,14 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "Filter by joint/articulation name",
+                        "description": "Filter by joint name",
                         "name": "joint",
                         "in": "query"
                     },
                     {
                         "type": "string",
                         "description": "Filter by movement name",
-                        "name": "moviment",
+                        "name": "movement",
                         "in": "query"
                     }
                 ],
@@ -307,7 +307,7 @@ const docTemplate = `{
                                                 "$ref": "#/definitions/core.MuscleMovementInfo"
                                             }
                                         },
-                                        "metaData": {
+                                        "metadata": {
                                             "$ref": "#/definitions/controllers.MetaData"
                                         }
                                     }

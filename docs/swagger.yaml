@@ -212,13 +212,13 @@ paths:
         in: query
         name: muscle_portion
         type: string
-      - description: Filter by joint/articulation name
+      - description: Filter by joint name
         in: query
         name: joint
         type: string
       - description: Filter by movement name
         in: query
-        name: moviment
+        name: movement
         type: string
       produces:
       - application/json
@@ -233,7 +233,7 @@ paths:
                   items:
                     $ref: '#/definitions/core.MuscleMovementInfo'
                   type: array
-                metaData:
+                metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
         "500":

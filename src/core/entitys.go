@@ -1,4 +1,11 @@
 package core
+type GitHubUser struct {
+	ID        int    `json:"id"`
+	Login     string `json:"login"`
+	Name      string `json:"name"`
+	Email     string `json:"email"`
+	AvatarURL string `json:"avatar_url"`
+}
 type MuscleMovementInfo struct {
 	MuscleGroupName   string `json:"muscle_group_name,omitempty"`
 	MusclePortionName string `json:"muscle_portion_name,omitempty"`
