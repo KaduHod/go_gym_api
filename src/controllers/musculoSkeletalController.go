@@ -80,7 +80,6 @@ func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http
         InternalServerErrorResponse(w, err)
         return
     }
-    fmt.Println(resources)
     SuccessResponse(w, *resources, len(*resources))
     return
 }

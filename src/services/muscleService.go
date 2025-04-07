@@ -46,14 +46,18 @@ func (s *MuscleService) GetWithPortions() (*[]core.MuscleGroup, error) {
     if err != nil {
        return nil, err
     }
+    var resources []core.MuscleGroup
     for _, group := range groups {
         for _, portion := range portions {
             if *portion.MuscleGroupId == *group.Id {
+                portion.MuscleGroupId = nil
                 group.Portions = append(group.Portions, portion)
+
             }
         }
+        resources = append(resources, group)
     }
-    return &groups, nil
+    return &resources, nil
 }
 
 func (s MuscleService) GetAllPortions() ([]core.MusclePortion, error) {
