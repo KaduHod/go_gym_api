@@ -1,12 +1,10 @@
 package controllers
 
 import (
-	"database/sql"
 	"encoding/json"
 	"net/http"
 )
 type Controller struct {
-	Db *sql.DB
 }
 
 type MetaData struct {
