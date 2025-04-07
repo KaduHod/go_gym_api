@@ -3,7 +3,6 @@ package services
 import (
 	"KaduHod/muscles_api/src/core"
 	"database/sql"
-	"fmt"
 )
 
 type MuscleService struct {
@@ -52,7 +51,6 @@ func (s *MuscleService) GetWithPortions() (*[]core.MuscleGroup, error) {
             if *portion.MuscleGroupId == *group.Id {
                 group.Portions = append(group.Portions, portion)
             }
-            fmt.Println(group.Portions)
         }
     }
     return &groups, nil
