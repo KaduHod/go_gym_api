@@ -1,12 +1,50 @@
 package controllers
 
 import (
+	"KaduHod/muscles_api/src/database"
+	"KaduHod/muscles_api/src/services"
+	"context"
 	"encoding/json"
+	"fmt"
+	"html/template"
 	"net/http"
 )
 type Controller struct {
+    Redis *database.Redis
+    UserService *services.UserService
 }
-
+func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
+    sessionId, err := r.Cookie("session_id")
+    if err != nil {
+        fmt.Println(err)
+        w.WriteHeader(500)
+        return
+    }
+    login := self.Redis.Conn.Get(context.Background(), "uuid:" + sessionId.Value).Val()
+    exists, err := self.UserService.Exists(login)
+    if err != nil {
+        fmt.Println(err)
+        w.WriteHeader(500)
+        return
+    }
+    if !exists {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
+    user, err := self.UserService.GetUser(login)
+    if err != nil {
+        http.Redirect(w, r, "/login", http.StatusSeeOther)
+        return
+    }
+    tmpl, err := template.ParseFiles("src/views/logged.html")
+    if err != nil {
+        fmt.Println(err)
+        w.WriteHeader(500)
+        return
+    }
+    fmt.Println(user)
+    tmpl.Execute(w, nil)
+}
 type MetaData struct {
 	TotalItens int `json:"total_itens"`
 }

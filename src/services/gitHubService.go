@@ -1,6 +1,7 @@
 package services
 
 import (
+	"KaduHod/muscles_api/src/core"
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -45,4 +46,28 @@ func (self GitHubService) GetUserToken(code string) (string, error) {
     }
     accessToken := values.Get("access_token")
     return accessToken, nil
+}
+func (self GitHubService) GetUserDetails(accessToken string) (core.ApiUser, error) {
+    request, err := http.NewRequest("GET", "https://api.github.com/user", nil)
+    var user core.ApiUser
+    if err != nil {
+        return user, err
+    }
+    request.Header.Set("Authorization", "token "+accessToken)
+    client := &http.Client{}
+    response, err := client.Do(request)
+    if err != nil {
+        return user, err
+    }
+    if response.StatusCode != 200 {
+        return user, errors.New("Code is not 200")
+    }
+    bodyBytes, err := io.ReadAll(response.Body)
+    if err != nil {
+        return user, err
+    }
+    if err := json.Unmarshal(bodyBytes, &user); err != nil {
+        return user, err
+    }
+    return user, nil
 }

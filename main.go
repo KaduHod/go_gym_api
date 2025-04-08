@@ -16,20 +16,25 @@ import (
 // @title Musculo Eskeletal Api
 // @version 1.0
 // @description API for Muscles System
-// @host localhost:3005
+// @host gymapi.kadu.tec.br
 // @BasePath /api/v1
 func main() {
     if err := godotenv.Load(".env"); err != nil {
         log.Fatal(err)
     }
     db := database.ConnetionMysql()
+    redis := database.NewRedis()
     defer db.Close()
     musclesService := services.MuscleService{Db: db}
     movementService := services.MovementService{Db: db}
     jointService := services.JointService{Db: db}
     ammService := services.AmmService{Db: db}
     githubService := services.GitHubService{}
-    controller := controllers.Controller{}
+    userService := services.UserService{Db: db}
+    controller := controllers.Controller{
+        Redis: redis,
+        UserService: &userService,
+    }
     musculoSkeletalController := controllers.MusculoSkeletalController{
         Controller: controller,
         MuscleService: &musclesService,
@@ -37,7 +42,11 @@ func main() {
         JointService: &jointService,
         AmmService: &ammService,
     }
-    loginController := controllers.LoginController{GitHubService: githubService}
+    loginController := controllers.LoginController{
+        GitHubService: &githubService,
+        Redis: redis,
+        UserService: &userService,
+    }
     server := http.NewServeMux()
     server.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
     server.HandleFunc("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
@@ -48,5 +57,6 @@ func main() {
     server.HandleFunc("/docs/", httpSwagger.WrapHandler)
     server.HandleFunc("/", loginController.Index)
     server.HandleFunc("/auth/github", loginController.Auth)
+    server.HandleFunc("/dashboard", controller.Dashboard)
     http.ListenAndServe(":3005", server)
 }
