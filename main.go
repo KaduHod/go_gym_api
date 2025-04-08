@@ -28,6 +28,7 @@ func main() {
     movementService := services.MovementService{Db: db}
     jointService := services.JointService{Db: db}
     ammService := services.AmmService{Db: db}
+    githubService := services.GitHubService{}
     controller := controllers.Controller{}
     musculoSkeletalController := controllers.MusculoSkeletalController{
         Controller: controller,
@@ -36,6 +37,7 @@ func main() {
         JointService: &jointService,
         AmmService: &ammService,
     }
+    loginController := controllers.LoginController{GitHubService: githubService}
     server := http.NewServeMux()
     server.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
     server.HandleFunc("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
@@ -44,5 +46,7 @@ func main() {
     server.HandleFunc("/api/v1/joints", musculoSkeletalController.ListJoints)
     server.HandleFunc("/api/v1/movements", musculoSkeletalController.ListMoviments)
     server.HandleFunc("/docs/", httpSwagger.WrapHandler)
+    server.HandleFunc("/", loginController.Index)
+    server.HandleFunc("/auth/github", loginController.Auth)
     http.ListenAndServe(":3005", server)
 }
