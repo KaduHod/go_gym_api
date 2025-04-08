@@ -36,9 +36,9 @@ func main() {
     userRepository := repository.UserRepository{Db: db}
     sessionService := services.SessionService{Redis: redis}
     controller := controllers.Controller{
-        Redis: redis,
         UserRepository: &userRepository,
         SessionService: &sessionService,
+        GitHubService: &githubService,
     }
     musculoSkeletalController := controllers.MusculoSkeletalController{
         Controller: controller,
@@ -61,7 +61,7 @@ func main() {
     server.HandleFunc("/api/v1/joints", musculoSkeletalController.ListJoints)
     server.HandleFunc("/api/v1/movements", musculoSkeletalController.ListMoviments)
     server.HandleFunc("/docs/", httpSwagger.WrapHandler)
-    server.HandleFunc("/", loginController.Index)
+    server.HandleFunc("/", controller.Index)
     server.HandleFunc("/auth/github", loginController.Auth)
     server.HandleFunc("/dashboard", controller.Dashboard)
     http.ListenAndServe(":3005", server)

@@ -1,7 +1,22 @@
 package core
+
+import "time"
+type UserSessionData struct {
+    Login string `json:"login"`
+    AccessToken string `json:"access_token"`
+}
+type UserAPIToken struct {
+	Id        uint64     `json:"id"`
+	UserId    uint64     `json:"user_id"`
+	TokenName string     `json:"token_name"`
+	TokenHash string     `json:"-"` // Nunca deve ser exposto
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at,omitempty"`
+}
 type ApiUser struct {
 	Login     string  `json:"login"`
-	ID        int64   `json:"id"`
+	Id        int64   `json:"id"`
 	AvatarURL string  `json:"avatar_url"`
 	URL       string  `json:"url"`
 	Tipo      string  `json:"type"`

@@ -2,21 +2,20 @@ package tests
 
 import (
 	"KaduHod/muscles_api/src/database"
-	"KaduHod/muscles_api/src/services"
+	repository "KaduHod/muscles_api/src/repositorys"
 	"log"
 	"testing"
 
 	"github.com/joho/godotenv"
 )
 
-func TesServices(t *testing.T) {
+func TestRepositorys(t *testing.T) {
     if err := godotenv.Load("../.env"); err != nil {
         log.Fatal(err)
     }
 	db := database.ConnetionMysql()
 	defer db.Close()
-
-	ammService := services.AmmService{Db: db}
+	ammRepository := repository.AmmRepository{Db: db}
 
 	tests := []struct {
 		name    string
@@ -47,18 +46,18 @@ func TesServices(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := ammService.GetAll(tt.filters)
+			_, err := ammRepository.GetAll(tt.filters)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("AmmService.GetAll() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("AmmRepository.GetAll() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 		})
 	}
 
-    jointService := services.JointService{Db: db}
+    jointRepository := repository.JointRepository{Db: db}
 
     t.Run("Joints :: GetAll", func(t *testing.T) {
-		joints, err := jointService.GetAll()
+		joints, err := jointRepository.GetAll()
 		if err != nil {
 			t.Fatalf("GetAll failed: %v", err)
 		}
@@ -79,13 +78,13 @@ func TesServices(t *testing.T) {
 
     t.Run("Joints :: GetById", func(t *testing.T) {
 		// First get any joint to test with
-		joints, err := jointService.GetAll()
+		joints, err := jointRepository.GetAll()
 		if err != nil || len(joints) == 0 {
 			t.Fatal("Need at least one joint to test GetById")
 		}
 
 		testJoint := joints[0]
-		joint, err := jointService.GetById(testJoint.Id)
+		joint, err := jointRepository.GetById(testJoint.Id)
 		if err != nil {
 			t.Fatalf("GetById failed: %v", err)
 		}
@@ -99,14 +98,14 @@ func TesServices(t *testing.T) {
 		}
 
 		// Test non-existent ID
-		_, err = jointService.GetById(-1)
+		_, err = jointRepository.GetById(-1)
 		if err == nil {
 			t.Error("Expected error for non-existent ID, got nil")
 		}
 	})
-	movementService := services.MovementService{Db: db}
+	movementRepository := repository.MovementRepository{Db: db}
     t.Run("Moviment :: GetAll", func(t *testing.T) {
-		movements, err := movementService.GetAll()
+		movements, err := movementRepository.GetAll()
 		if err != nil {
 			t.Fatalf("GetAll failed: %v", err)
 		}
@@ -127,13 +126,13 @@ func TesServices(t *testing.T) {
 
     t.Run("Moviment :: GetById", func(t *testing.T) {
 		// First get any movement to test with
-		movements, err := movementService.GetAll()
+		movements, err := movementRepository.GetAll()
 		if err != nil || len(movements) == 0 {
 			t.Fatal("Need at least one movement to test GetById")
 		}
 
 		testMovement := movements[0]
-		movement, err := movementService.GetById(testMovement.Id)
+		movement, err := movementRepository.GetById(testMovement.Id)
 		if err != nil {
 			t.Fatalf("GetById failed: %v", err)
 		}
@@ -147,16 +146,16 @@ func TesServices(t *testing.T) {
 		}
 
 		// Test non-existent ID
-		_, err = movementService.GetById(-1)
+		_, err = movementRepository.GetById(-1)
 		if err == nil {
 			t.Error("Expected error for non-existent ID, got nil")
 		}
 	})
 
-	muscleService := services.MuscleService{Db: db}
+	muscleRepository := repository.MuscleRepository{Db: db}
 
 	t.Run("Muscle :: GetAll", func(t *testing.T) {
-		groups, err := muscleService.GetAll()
+		groups, err := muscleRepository.GetAll()
 		if err != nil {
 			t.Fatalf("GetAll failed: %v", err)
 		}
@@ -176,13 +175,13 @@ func TesServices(t *testing.T) {
 	})
 
 	t.Run("Muscle :: GetById", func(t *testing.T) {
-		groups, err := muscleService.GetAll()
+		groups, err := muscleRepository.GetAll()
 		if err != nil || len(groups) == 0 {
 			t.Fatal("Need at least one muscle group to test GetById")
 		}
 
 		testGroup := groups[0]
-		group, err := muscleService.GetById(*testGroup.Id)
+		group, err := muscleRepository.GetById(*testGroup.Id)
 		if err != nil {
 			t.Fatalf("GetById failed: %v", err)
 		}
@@ -197,7 +196,7 @@ func TesServices(t *testing.T) {
 	})
 
 	t.Run("Muscle :: GetWithPortions", func(t *testing.T) {
-		groups, err := muscleService.GetWithPortions()
+		groups, err := muscleRepository.GetWithPortions()
 		if err != nil {
 			t.Fatalf("GetWithPortions failed: %v", err)
 		}
@@ -214,7 +213,7 @@ func TesServices(t *testing.T) {
 	})
 
 	t.Run("Muscle :: GetAllPortions", func(t *testing.T) {
-		portions, err := muscleService.GetAllPortions()
+		portions, err := muscleRepository.GetAllPortions()
 		if err != nil {
 			t.Fatalf("GetAllPortions failed: %v", err)
 		}
@@ -237,13 +236,13 @@ func TesServices(t *testing.T) {
 	})
 
 	t.Run("Muscle :: GetPortionById", func(t *testing.T) {
-		portions, err := muscleService.GetAllPortions()
+		portions, err := muscleRepository.GetAllPortions()
 		if err != nil || len(portions) == 0 {
 			t.Fatal("Need at least one portion to test GetPortionById")
 		}
 
 		testPortion := portions[0]
-		portion, err := muscleService.GetPortionById(*testPortion.Id)
+		portion, err := muscleRepository.GetPortionById(*testPortion.Id)
 		if err != nil {
 			t.Fatalf("GetPortionById failed: %v", err)
 		}

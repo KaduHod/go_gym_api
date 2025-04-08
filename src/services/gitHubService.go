@@ -61,6 +61,7 @@ func (self GitHubService) GetUserDetails(accessToken string) (core.ApiUser, erro
         return user, err
     }
     if response.StatusCode != 200 {
+        fmt.Println(response.StatusCode)
         return user, errors.New("Code is not 200")
     }
     bodyBytes, err := io.ReadAll(response.Body)

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"KaduHod/muscles_api/src/database"
 	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
 	"encoding/json"
@@ -10,24 +9,47 @@ import (
 	"net/http"
 )
 type Controller struct {
-    Redis *database.Redis
     SessionService *services.SessionService
     UserRepository *repository.UserRepository
+    GitHubService *services.GitHubService
+}
+func (self Controller) Render(w *http.ResponseWriter, pageName string, data interface{}) {
+    tmplPage, err := template.ParseFiles("views/base.html", "views/pages/" + pageName)
+    if err != nil {
+        self.InternalServerError(*w, nil, err)
+        return
+    }
+    tmpl := template.Must(tmplPage, err)
+    tmpl.Execute(*w, data)
 }
 func (self Controller) InternalServerError(w http.ResponseWriter, r *http.Request, err error) {
     fmt.Println(err)
     w.WriteHeader(500)
     return
 }
+func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
+    sessionExists, err := self.SessionService.SessionExists(r)
+    if err != nil {
+        self.InternalServerError(w, r, err)
+        return
+    }
+    if sessionExists {
+        self.Dashboard(w, r)
+        return
+    }
+    data := map[string]interface{}{
+        "Link": self.GitHubService.GetAuthUri(),
+    }
+    self.Render(&w, "login.html", data)
+}
 func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
     sessionExists, err := self.SessionService.SessionExists(r)
-    fmt.Println("Pegando sessao")
     if err != nil {
         self.InternalServerError(w, r, err)
         return
     }
     if !sessionExists {
-        http.Redirect(w, r, "/", http.StatusSeeOther)
+        self.Index(w, r)
         return
     }
     userSession, err := self.SessionService.GetUserFromSession(r)
@@ -44,12 +66,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         http.Redirect(w, r, "/login", http.StatusSeeOther)
         return
     }
-    tmpl, err := template.ParseFiles("src/views/logged.html")
-    if err != nil {
-        self.InternalServerError(w, r, err)
-        return
-    }
-    tmpl.Execute(w, nil)
+    self.Render(&w, "dashboard.html", nil)
 }
 type MetaData struct {
 	TotalItens int `json:"total_itens"`
@@ -65,7 +82,6 @@ type ResponseSwegger struct {
     Data     interface {}       `json:"data"`
 	MetaData MetaData `json:"metadata"`
 }
-
 func SuccessResponse[T any](w http.ResponseWriter, data T, totalItems int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -77,7 +93,6 @@ func SuccessResponse[T any](w http.ResponseWriter, data T, totalItems int) {
 		},
 	})
 }
-
 func InternalServerErrorResponse(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusInternalServerError)
@@ -86,7 +101,6 @@ func InternalServerErrorResponse(w http.ResponseWriter, err error) {
 		Data:   err.Error(),
 	})
 }
-
 func EmptyResponse(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNoContent)

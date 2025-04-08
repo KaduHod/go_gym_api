@@ -4,7 +4,7 @@ import (
 	"KaduHod/muscles_api/src/core"
 	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
-	"html/template"
+	"fmt"
 	"net/http"
 )
 
@@ -24,7 +24,8 @@ func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
     var user core.ApiUser
     user, err = self.GitHubService.GetUserDetails(accessToken)
     if err != nil {
-        self.InternalServerError(w, r, err)
+        fmt.Println(err)
+        self.Controller.Index(w, r)
         return
     }
     exists, err := self.UserRepository.Exists(user.Login)
@@ -43,37 +44,4 @@ func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
         return
     }
     self.Controller.Dashboard(w, r)
-}
-func (self LoginController) LoggedIndex(w http.ResponseWriter, r *http.Request) {
-    sessionExists, err := self.SessionService.SessionExists(r)
-    if !sessionExists {
-        self.InternalServerError(w, r, err)
-        return
-    }
-    tmpl, err := template.ParseFiles("src/views/logged.html")
-    if err != nil {
-        self.InternalServerError(w, r, err)
-        return
-    }
-    tmpl.Execute(w, nil)
-}
-func (self LoginController) Index(w http.ResponseWriter, r *http.Request) {
-    sessionExists, err := self.SessionService.SessionExists(r)
-    if err != nil {
-        self.InternalServerError(w, r, err)
-        return
-    }
-    if sessionExists {
-        self.LoggedIndex(w, r)
-        return
-    }
-    tmpl, err := template.ParseFiles("src/views/login.html")
-    if err != nil {
-        self.InternalServerError(w, r, err)
-        return
-    }
-    data := map[string]interface{}{
-        "Link": self.GitHubService.GetAuthUri(),
-    }
-    tmpl.Execute(w, data)
 }

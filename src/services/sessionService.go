@@ -15,10 +15,6 @@ import (
 type SessionService struct {
     Redis *database.Redis
 }
-type UserSessionData struct {
-    Login string `json:"login"`
-    AccessToken string `json:"access_token"`
-}
 func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser, githubAccessToken string) error {
     id := uuid.New()
     sessionIdCookie := &http.Cookie{
@@ -30,7 +26,7 @@ func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser,
         MaxAge: 3600*2,
     }
     http.SetCookie(*w, sessionIdCookie)
-    value, err := json.Marshal(UserSessionData{Login: user.Login, AccessToken: githubAccessToken})
+    value, err := json.Marshal(core.UserSessionData{Login: user.Login, AccessToken: githubAccessToken})
     if err != nil {
        return err
     }
@@ -41,8 +37,8 @@ func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser,
     }
     return nil
 }
-func (self SessionService) GetUserFromSession(r *http.Request) (UserSessionData, error) {
-    var userSessionData UserSessionData
+func (self SessionService) GetUserFromSession(r *http.Request) (core.UserSessionData, error) {
+    var userSessionData core.UserSessionData
     sessionId, err := r.Cookie("session_id")
     if err != nil {
         return userSessionData, err

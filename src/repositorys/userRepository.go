@@ -35,7 +35,7 @@ func (s *UserRepository) GetUser(login string) (*core.ApiUser, error) {
 	row := s.Db.QueryRow(query, login)
 	user := &core.ApiUser{}
 	err := row.Scan(
-		&user.ID,
+		&user.Id,
 		&user.Login,
 		&user.AvatarURL,
 		&user.URL,
