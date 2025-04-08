@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -70,4 +71,10 @@ func (self GitHubService) GetUserDetails(accessToken string) (core.ApiUser, erro
         return user, err
     }
     return user, nil
+}
+func (self GitHubService) GetAuthUri () string {
+    redirectUri := os.Getenv("GITHUB_REDIRECT_URL")
+    clientId := os.Getenv("GITHUB_CLIENT_ID")
+    loginLink := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&scope=user&redirect_uri=%s", clientId, redirectUri)
+    return loginLink
 }

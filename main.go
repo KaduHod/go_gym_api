@@ -23,14 +23,16 @@ func main() {
         log.Fatal(err)
     }
     db := database.ConnetionMysql()
-    redis := database.NewRedis()
     defer db.Close()
+    redis := database.NewRedis()
+    defer redis.Conn.Close()
     musclesService := services.MuscleService{Db: db}
     movementService := services.MovementService{Db: db}
     jointService := services.JointService{Db: db}
     ammService := services.AmmService{Db: db}
     githubService := services.GitHubService{}
     userService := services.UserService{Db: db}
+    sessionService := services.SessionService{Redis: redis}
     controller := controllers.Controller{
         Redis: redis,
         UserService: &userService,
@@ -44,7 +46,7 @@ func main() {
     }
     loginController := controllers.LoginController{
         GitHubService: &githubService,
-        Redis: redis,
+        SessionService: &sessionService,
         UserService: &userService,
     }
     server := http.NewServeMux()

@@ -2,22 +2,16 @@ package controllers
 
 import (
 	"KaduHod/muscles_api/src/core"
-	"KaduHod/muscles_api/src/database"
 	"KaduHod/muscles_api/src/services"
-	"context"
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
-	"time"
-
-	"github.com/google/uuid"
 )
 
 type LoginController struct {
    GitHubService *services.GitHubService
    UserService *services.UserService
-   Redis *database.Redis
+   SessionService *services.SessionService
 }
 func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
     code := r.URL.Query().Get("code")
@@ -52,42 +46,37 @@ func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
         w.WriteHeader(500)
         return
     }
-    id := uuid.New()
-    sessionIdCookie := &http.Cookie{
-        Name: "session_id",
-        Value: id.String(),
-        Path: "/",
-        HttpOnly: true,
-        Secure: false,
-        MaxAge: 3600*2,
+    if err := self.SessionService.NewSession(&w, user); err != nil {
+        fmt.Println(err)
+        w.WriteHeader(500)
+        return
     }
-    http.SetCookie(w, sessionIdCookie)
-    self.Redis.Conn.Set(context.Background(), "uuid:"+id.String(), user.Login, time.Hour * 2)
     http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
-func (self LoginController) getLink () string {
-    redirectUri := os.Getenv("GITHUB_REDIRECT_URL")
-    clientId := os.Getenv("GITHUB_CLIENT_ID")
-    loginLink := fmt.Sprintf("https://github.com/login/oauth/authorize?client_id=%s&scope=user&redirect_uri=%s", clientId, redirectUri)
-    return loginLink
+func (self LoginController) LoggedIndex(w http.ResponseWriter, r *http.Request) {
+    sessionExists, err := self.SessionService.SessionExists(r)
+    if !sessionExists {
+        fmt.Println(err)
+        w.WriteHeader(500)
+        return
+    }
+    tmpl, err := template.ParseFiles("src/views/logged.html")
+    if err != nil {
+        fmt.Println(err)
+        w.WriteHeader(500)
+        return
+    }
+    tmpl.Execute(w, nil)
 }
-
 func (self LoginController) Index(w http.ResponseWriter, r *http.Request) {
-    sessionId, err := r.Cookie("session_id")
+    sessionExists, err := self.SessionService.SessionExists(r)
     if err != nil {
         fmt.Println(err)
         w.WriteHeader(500)
         return
     }
-    login := self.Redis.Conn.Get(context.Background(), "uuid:" + sessionId.Value).Val()
-    exists, err := self.UserService.Exists(login)
-    if exists {
-        http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-        return
-    }
-    if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+    if sessionExists {
+        self.LoggedIndex(w, r)
         return
     }
     tmpl, err := template.ParseFiles("src/views/login.html")
@@ -97,7 +86,7 @@ func (self LoginController) Index(w http.ResponseWriter, r *http.Request) {
         return
     }
     data := map[string]interface{}{
-        "Link": self.getLink(),
+        "Link": self.GitHubService.GetAuthUri(),
     }
     tmpl.Execute(w, data)
 }

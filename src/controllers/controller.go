@@ -31,7 +31,6 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         http.Redirect(w, r, "/login", http.StatusSeeOther)
         return
     }
-    user, err := self.UserService.GetUser(login)
     if err != nil {
         http.Redirect(w, r, "/login", http.StatusSeeOther)
         return
@@ -42,7 +41,6 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         w.WriteHeader(500)
         return
     }
-    fmt.Println(user)
     tmpl.Execute(w, nil)
 }
 type MetaData struct {
