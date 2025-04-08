@@ -20,8 +20,8 @@ type TokenService struct {
 	once            sync.Once
 }
 
-func NewTokenService(userRepo *repository.UserRepository, tokenRepo *repository.TokenRepository) *TokenService {
-	return &TokenService{
+func NewTokenService(userRepo *repository.UserRepository, tokenRepo *repository.TokenRepository) TokenService {
+	return TokenService{
 		UserRepository:  userRepo,
 		TokenRepository: tokenRepo,
 	}

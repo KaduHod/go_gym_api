@@ -28,12 +28,12 @@ func (s *UserRepository) CreateUser(user core.ApiUser) error {
 	return err
 }
 
-func (s *UserRepository) GetUser(login string) (*core.ApiUser, error) {
+func (s *UserRepository) GetUser(login string) (core.ApiUser, error) {
 	query := `SELECT
 		id, login, avatar_url, url, tipo, nome, empresa, blog, localizacao, email
 	FROM api_users WHERE login = ?`
 	row := s.Db.QueryRow(query, login)
-	user := &core.ApiUser{}
+	user := core.ApiUser{}
 	err := row.Scan(
 		&user.Id,
 		&user.Login,
@@ -48,7 +48,7 @@ func (s *UserRepository) GetUser(login string) (*core.ApiUser, error) {
 	)
 
 	if err == sql.ErrNoRows {
-		return nil, nil
+		return user, nil
 	}
 	return user, err
 }

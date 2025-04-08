@@ -32,13 +32,18 @@ func main() {
     movementRepository := repository.MovementRepository{Db: db}
     jointRepository := repository.JointRepository{Db: db}
     ammRepository := repository.AmmRepository{Db: db}
-    githubService := services.GitHubService{}
     userRepository := repository.UserRepository{Db: db}
+    tokenRepository := repository.TokenRepository{Db: db}
+    githubService := services.GitHubService{}
     sessionService := services.SessionService{Redis: redis}
+    tokenService := services.NewTokenService(&userRepository, &tokenRepository)
+    csrfService := services.NewCsrfService(&sessionService)
     controller := controllers.Controller{
         UserRepository: &userRepository,
         SessionService: &sessionService,
         GitHubService: &githubService,
+        TokenService: &tokenService,
+        TokenRepository: &tokenRepository,
     }
     musculoSkeletalController := controllers.MusculoSkeletalController{
         Controller: controller,
@@ -52,6 +57,7 @@ func main() {
         GitHubService: &githubService,
         SessionService: &sessionService,
         UserRepository: &userRepository,
+        CsrfService: csrfService,
     }
     server := http.NewServeMux()
     server.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)

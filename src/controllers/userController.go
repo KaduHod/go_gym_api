@@ -10,8 +10,12 @@ type UserController struct {
     Controller
     SessionService *services.SessionService
     UserRepository *repository.UserRepository
+    TokenService *services.TokenService
 }
 
 func (self UserController) ListToken(w http.ResponseWriter, r *http.Request) {
+
+}
+func (self UserController) CreateToken(w http.ResponseWriter, r *http.Request) {
 
 }

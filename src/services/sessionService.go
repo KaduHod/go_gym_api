@@ -15,7 +15,7 @@ import (
 type SessionService struct {
     Redis *database.Redis
 }
-func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser, githubAccessToken string) error {
+func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser, githubAccessToken string, csrfToken core.CsrfTokenInfo) error {
     id := uuid.New()
     sessionIdCookie := &http.Cookie{
         Name: "session_id",
@@ -26,7 +26,7 @@ func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser,
         MaxAge: 3600*2,
     }
     http.SetCookie(*w, sessionIdCookie)
-    value, err := json.Marshal(core.UserSessionData{Login: user.Login, AccessToken: githubAccessToken})
+    value, err := json.Marshal(core.UserSessionData{Login: user.Login, AccessToken: githubAccessToken, CsrfToken: csrfToken})
     if err != nil {
        return err
     }
@@ -37,7 +37,7 @@ func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser,
     }
     return nil
 }
-func (self SessionService) GetUserFromSession(r *http.Request) (core.UserSessionData, error) {
+func (self SessionService) GetSession(r *http.Request) (core.UserSessionData, error) {
     var userSessionData core.UserSessionData
     sessionId, err := r.Cookie("session_id")
     if err != nil {
@@ -66,4 +66,11 @@ func (self SessionService) SessionExists(r *http.Request) (bool, error) {
         return false, err
     }
     return true, nil
+}
+func (self SessionService) GetSessionId(r *http.Request) (string, error) {
+    sessionId, err := r.Cookie("session_id")
+    if err != nil {
+        return "", err
+    }
+    return sessionId.Value, nil
 }

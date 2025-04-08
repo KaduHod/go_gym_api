@@ -13,6 +13,7 @@ type LoginController struct {
     GitHubService *services.GitHubService
     UserRepository *repository.UserRepository
     SessionService *services.SessionService
+    CsrfService *services.CsrfService
 }
 func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
     code := r.URL.Query().Get("code")
@@ -39,7 +40,8 @@ func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
             return
         }
     }
-    if err := self.SessionService.NewSession(&w, user, accessToken); err != nil {
+    csrfInfo := self.CsrfService.CreateToken(w)
+    if err := self.SessionService.NewSession(&w, user, accessToken, csrfInfo); err != nil {
         self.InternalServerError(w, r, err)
         return
     }

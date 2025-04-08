@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"KaduHod/muscles_api/src/core"
 	"KaduHod/muscles_api/src/database"
 	repository "KaduHod/muscles_api/src/repositorys"
 	"log"
@@ -251,5 +252,11 @@ func TestRepositorys(t *testing.T) {
 			t.Errorf("Expected portion ID %d, got %d", *testPortion.Id, *portion.Id)
 		}
 	})
-
+    tokenRepository := repository.TokenRepository{Db: db}
+    t.Run("Token :: List tokens", func(t *testing.T) {
+        _, err := tokenRepository.GetTokens(core.ApiUser{Id: 1})
+        if err != nil {
+            t.Fatal(err)
+        }
+    })
 }

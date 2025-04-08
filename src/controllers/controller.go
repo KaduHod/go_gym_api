@@ -9,8 +9,10 @@ import (
 	"net/http"
 )
 type Controller struct {
-    SessionService *services.SessionService
     UserRepository *repository.UserRepository
+    TokenRepository *repository.TokenRepository
+    SessionService *services.SessionService
+    TokenService *services.TokenService
     GitHubService *services.GitHubService
 }
 func (self Controller) Render(w *http.ResponseWriter, pageName string, data interface{}) {
@@ -52,7 +54,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         self.Index(w, r)
         return
     }
-    userSession, err := self.SessionService.GetUserFromSession(r)
+    userSession, err := self.SessionService.GetSession(r)
     if err != nil {
         self.InternalServerError(w, r, err)
         return
@@ -66,7 +68,26 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         http.Redirect(w, r, "/login", http.StatusSeeOther)
         return
     }
-    self.Render(&w, "dashboard.html", nil)
+    user, err := self.UserRepository.GetUser(userSession.Login)
+    if err != nil {
+        self.InternalServerError(w, r, err)
+        return
+    }
+    tokens, err := self.TokenRepository.GetTokens(user)
+    if err != nil {
+        self.InternalServerError(w, r, err)
+        return
+    }
+    for _, token := range tokens {
+        token.TokenHash = string(token.TokenHash[0:10])
+    }
+    data := map[string]interface{}{
+        "User": user,
+        "Tokens": tokens,
+        "Csrf": userSession.CsrfToken.Token,
+    }
+    fmt.Println(data)
+    self.Render(&w, "dashboard.html", data)
 }
 type MetaData struct {
 	TotalItens int `json:"total_itens"`

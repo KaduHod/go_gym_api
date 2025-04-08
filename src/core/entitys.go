@@ -1,9 +1,14 @@
 package core
 
 import "time"
+type CsrfTokenInfo struct {
+	Token      string
+	Expiration time.Time
+}
 type UserSessionData struct {
     Login string `json:"login"`
     AccessToken string `json:"access_token"`
+    CsrfToken CsrfTokenInfo `json:"csrf_token"`
 }
 type UserAPIToken struct {
 	Id        uint64     `json:"id"`
