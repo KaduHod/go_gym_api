@@ -1,15 +1,15 @@
-package services
+package repository
 
 import (
 	"KaduHod/muscles_api/src/core"
 	"database/sql"
 )
 
-type UserService struct {
+type UserRepository struct {
     Db *sql.DB
 }
 
-func (s *UserService) CreateUser(user core.ApiUser) error {
+func (s *UserRepository) CreateUser(user core.ApiUser) error {
 	query := `INSERT INTO api_users (
 		login, avatar_url, url, tipo, nome, empresa, blog, localizacao, email
 	) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -28,7 +28,7 @@ func (s *UserService) CreateUser(user core.ApiUser) error {
 	return err
 }
 
-func (s *UserService) GetUser(login string) (*core.ApiUser, error) {
+func (s *UserRepository) GetUser(login string) (*core.ApiUser, error) {
 	query := `SELECT
 		id, login, avatar_url, url, tipo, nome, empresa, blog, localizacao, email
 	FROM api_users WHERE login = ?`
@@ -53,7 +53,7 @@ func (s *UserService) GetUser(login string) (*core.ApiUser, error) {
 	return user, err
 }
 
-func (s *UserService) Exists(login string) (bool, error) {
+func (s *UserRepository) Exists(login string) (bool, error) {
 	query := `SELECT EXISTS(SELECT 1 FROM api_users WHERE login = ?)`
 	var exists bool
 	err := s.Db.QueryRow(query, login).Scan(&exists)

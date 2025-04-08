@@ -2,68 +2,57 @@ package controllers
 
 import (
 	"KaduHod/muscles_api/src/core"
+	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
-	"fmt"
 	"html/template"
 	"net/http"
 )
 
 type LoginController struct {
-   GitHubService *services.GitHubService
-   UserService *services.UserService
-   SessionService *services.SessionService
+    Controller
+    GitHubService *services.GitHubService
+    UserRepository *repository.UserRepository
+    SessionService *services.SessionService
 }
 func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
     code := r.URL.Query().Get("code")
     accessToken, err := self.GitHubService.GetUserToken(code)
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
     var user core.ApiUser
     user, err = self.GitHubService.GetUserDetails(accessToken)
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
-    exists, err := self.UserService.Exists(user.Login)
+    exists, err := self.UserRepository.Exists(user.Login)
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
     if !exists {
-        if err := self.UserService.CreateUser(user); err != nil {
-            fmt.Println(err)
-            w.WriteHeader(500)
+        if err := self.UserRepository.CreateUser(user); err != nil {
+            self.InternalServerError(w, r, err)
             return
         }
     }
-    if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+    if err := self.SessionService.NewSession(&w, user, accessToken); err != nil {
+        self.InternalServerError(w, r, err)
         return
     }
-    if err := self.SessionService.NewSession(&w, user); err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
-        return
-    }
-    http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+    self.Controller.Dashboard(w, r)
 }
 func (self LoginController) LoggedIndex(w http.ResponseWriter, r *http.Request) {
     sessionExists, err := self.SessionService.SessionExists(r)
     if !sessionExists {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
     tmpl, err := template.ParseFiles("src/views/logged.html")
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
     tmpl.Execute(w, nil)
@@ -71,8 +60,7 @@ func (self LoginController) LoggedIndex(w http.ResponseWriter, r *http.Request) 
 func (self LoginController) Index(w http.ResponseWriter, r *http.Request) {
     sessionExists, err := self.SessionService.SessionExists(r)
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
     if sessionExists {
@@ -81,8 +69,7 @@ func (self LoginController) Index(w http.ResponseWriter, r *http.Request) {
     }
     tmpl, err := template.ParseFiles("src/views/login.html")
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
     data := map[string]interface{}{

@@ -1,18 +1,19 @@
 package controllers
 
 import (
-	"KaduHod/muscles_api/src/services"
+	repository "KaduHod/muscles_api/src/repositorys"
 	"database/sql"
 	"fmt"
 	"net/http"
 )
+
 //carlos
 type MusculoSkeletalController struct {
     Controller
-    MovementService *services.MovementService
-    MuscleService *services.MuscleService
-    JointService *services.JointService
-    AmmService *services.AmmService
+    MovementRepository *repository.MovementRepository
+    MuscleRepository *repository.MuscleRepository
+    JointRepository *repository.JointRepository
+    AmmRepository *repository.AmmRepository
 
 }
 // ListMuscleGroups godoc
@@ -25,7 +26,7 @@ type MusculoSkeletalController struct {
 // @Failure 500 {object} controllers.ResponseSwegger{data=string}
 // @Router /muscles/groups [get]
 func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r *http.Request) {
-    resources, err := self.MuscleService.GetAll()
+    resources, err := self.MuscleRepository.GetAll()
     if err == sql.ErrNoRows {
         SuccessResponse(w, resources, 0)
         return
@@ -48,7 +49,7 @@ func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r 
 // @Failure 500 {object} controllers.ResponseSwegger{data=string}
 // @Router /muscles/portions [get]
 func (self MusculoSkeletalController) ListMusclePortions(w http.ResponseWriter, r *http.Request) {
-    resources, err := self.MuscleService.GetAllPortions()
+    resources, err := self.MuscleRepository.GetAllPortions()
     if err == sql.ErrNoRows {
         SuccessResponse(w, resources, 0)
         return
@@ -70,7 +71,7 @@ func (self MusculoSkeletalController) ListMusclePortions(w http.ResponseWriter, 
 // @Failure 500 {object} controllers.ResponseSwegger{data=string}
 // @Router /muscles [get]
 func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http.Request) {
-    resources, err := self.MuscleService.GetWithPortions()
+    resources, err := self.MuscleRepository.GetWithPortions()
     if err == sql.ErrNoRows {
         SuccessResponse(w, resources, 0)
         return
@@ -93,7 +94,7 @@ func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http
 // @Failure 500 {object} controllers.ResponseSwegger{data=string}
 // @Router /joints [get]
 func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.Request) {
-    resources, err := self.JointService.GetAll()
+    resources, err := self.JointRepository.GetAll()
     if err == sql.ErrNoRows {
         SuccessResponse(w, resources, 0)
         return
@@ -115,7 +116,7 @@ func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.
 // @Failure 500 {object} controllers.ResponseSwegger{data=string}
 // @Router /movements [get]
 func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *http.Request) {
-    resources, err := self.MovementService.GetAll()
+    resources, err := self.MovementRepository.GetAll()
     if err == sql.ErrNoRows {
         SuccessResponse(w, resources, 0)
         return
@@ -147,7 +148,7 @@ func (self MusculoSkeletalController) ListAmm(w http.ResponseWriter, r *http.Req
         "joint": r.URL.Query().Get("joint"),
         "moviment": r.URL.Query().Get("moviment"),
     }
-    resources, err := self.AmmService.GetAll(filters)
+    resources, err := self.AmmRepository.GetAll(filters)
     if err == sql.ErrNoRows {
         SuccessResponse(w, resources, 0)
         return

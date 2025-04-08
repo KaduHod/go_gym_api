@@ -1,15 +1,15 @@
-package services
+package repository
 
 import (
 	"KaduHod/muscles_api/src/core"
 	"database/sql"
 	"strings"
 )
-type AmmService struct {
+type AmmRepository struct {
 	Db *sql.DB
 }
 
-func (s AmmService) GetAll(filters map[string]string) ([]core.MuscleMovementInfo, error) {
+func (s AmmRepository) GetAll(filters map[string]string) ([]core.MuscleMovementInfo, error) {
 	query := `SELECT
 		mp.name AS muscle_portion_name,
 		mg.name AS muscle_group_name,

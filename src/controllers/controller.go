@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"KaduHod/muscles_api/src/database"
+	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
-	"context"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -11,34 +11,42 @@ import (
 )
 type Controller struct {
     Redis *database.Redis
-    UserService *services.UserService
+    SessionService *services.SessionService
+    UserRepository *repository.UserRepository
+}
+func (self Controller) InternalServerError(w http.ResponseWriter, r *http.Request, err error) {
+    fmt.Println(err)
+    w.WriteHeader(500)
+    return
 }
 func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
-    sessionId, err := r.Cookie("session_id")
+    sessionExists, err := self.SessionService.SessionExists(r)
+    fmt.Println("Pegando sessao")
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
-    login := self.Redis.Conn.Get(context.Background(), "uuid:" + sessionId.Value).Val()
-    exists, err := self.UserService.Exists(login)
+    if !sessionExists {
+        http.Redirect(w, r, "/", http.StatusSeeOther)
+        return
+    }
+    userSession, err := self.SessionService.GetUserFromSession(r)
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
+        return
+    }
+    exists, err := self.UserRepository.Exists(userSession.Login)
+    if err != nil {
+        self.InternalServerError(w, r, err)
         return
     }
     if !exists {
         http.Redirect(w, r, "/login", http.StatusSeeOther)
         return
     }
-    if err != nil {
-        http.Redirect(w, r, "/login", http.StatusSeeOther)
-        return
-    }
     tmpl, err := template.ParseFiles("src/views/logged.html")
     if err != nil {
-        fmt.Println(err)
-        w.WriteHeader(500)
+        self.InternalServerError(w, r, err)
         return
     }
     tmpl.Execute(w, nil)

@@ -4,17 +4,22 @@ import (
 	"KaduHod/muscles_api/src/core"
 	"KaduHod/muscles_api/src/database"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
+	"slices"
 	"time"
 
 	"github.com/google/uuid"
 )
-
 type SessionService struct {
     Redis *database.Redis
 }
-func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser) error {
+type UserSessionData struct {
+    Login string `json:"login"`
+    AccessToken string `json:"access_token"`
+}
+func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser, githubAccessToken string) error {
     id := uuid.New()
     sessionIdCookie := &http.Cookie{
         Name: "session_id",
@@ -25,32 +30,43 @@ func (self SessionService) NewSession(w *http.ResponseWriter, user core.ApiUser)
         MaxAge: 3600*2,
     }
     http.SetCookie(*w, sessionIdCookie)
-    if err := self.Redis.Conn.Set(context.Background(), "uuid:"+id.String(), user.Login, time.Hour * 2).Err(); err != nil {
+    value, err := json.Marshal(UserSessionData{Login: user.Login, AccessToken: githubAccessToken})
+    if err != nil {
+       return err
+    }
+    if err := self.Redis.Conn.Set(context.Background(), "uuid:"+id.String(), value, time.Hour * 2).Err(); err != nil {
         fmt.Println("Erro ao criar sessao")
         fmt.Println(err)
         return err
     }
     return nil
 }
-func (self SessionService) GetUserFromSession(r *http.Request) (string, error) {
-    var login string
+func (self SessionService) GetUserFromSession(r *http.Request) (UserSessionData, error) {
+    var userSessionData UserSessionData
     sessionId, err := r.Cookie("session_id")
     if err != nil {
-        return login, err
+        return userSessionData, err
     }
     cmd := self.Redis.Conn.Get(context.Background() ,"uuid:"+sessionId.Value)
     if cmd.Err() != nil {
-        return login, cmd.Err()
+        return userSessionData, cmd.Err()
     }
-    return cmd.Val(), nil
+    bytes, err := cmd.Bytes()
+    if err != nil {
+        return userSessionData, err
+    }
+    if err := json.Unmarshal(bytes, &userSessionData); err != nil {
+        return userSessionData, err
+    }
+    return userSessionData, nil
 }
 func (self SessionService) SessionExists(r *http.Request) (bool, error) {
     _, err := r.Cookie("session_id")
-    if err != nil && err.Error() != "http: named cookie not present" {
-        return false, err
+    errs := []string{"http: named cookie not present"}
+    if err != nil && slices.Contains(errs, err.Error()) {
+        return false, nil
     }
-    _, err = self.GetUserFromSession(r)
-    if err != nil {
+    if err != nil && !slices.Contains(errs, err.Error()) {
         return false, err
     }
     return true, nil

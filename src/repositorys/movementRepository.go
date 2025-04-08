@@ -1,25 +1,24 @@
-package services
+package repository
 
 import (
 	"KaduHod/muscles_api/src/core"
 	"database/sql"
 )
-
-type JointService struct {
+type MovementRepository struct {
 	Db *sql.DB
 }
 
-func (s *JointService) GetAll() ([]core.Joint, error) {
-	query := "SELECT id, name FROM articulations"
+func (s *MovementRepository) GetAll() ([]core.Movement, error) {
+	query := "SELECT id, name FROM movements"
 	rows, err := s.Db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var resources []core.Joint
+	var resources []core.Movement
 	for rows.Next() {
-		var resource core.Joint
+		var resource core.Movement
 		if err := rows.Scan(&resource.Id, &resource.Name); err != nil {
 			return nil, err
 		}
@@ -28,14 +27,13 @@ func (s *JointService) GetAll() ([]core.Joint, error) {
 	return resources, nil
 }
 
-func (s *JointService) GetById(id int) (*core.Joint, error) {
-	query := "SELECT id, name FROM articulations WHERE id = ?"
+func (s *MovementRepository) GetById(id int) (*core.Movement, error) {
+	query := "SELECT id, name FROM movements WHERE id = ?"
 	row := s.Db.QueryRow(query, id)
 
-	var resource core.Joint
+	var resource core.Movement
 	if err := row.Scan(&resource.Id, &resource.Name); err != nil {
 		return nil, err
 	}
 	return &resource, nil
 }
-
