@@ -1,6 +1,11 @@
 package main
 
-import "net/http"
+import (
+	"errors"
+	"fmt"
+	"log"
+	"net/http"
+)
 type CustomServer struct {
     server *http.ServeMux
 }
@@ -8,13 +13,19 @@ func (self CustomServer) handle(method string, path string,  handler func(w http
     var curr http.Handler
     if len(middlewares) != 0 {
         lastMiddleware := middlewares[len(middlewares) - 1]
-        curr := lastMiddleware(http.HandlerFunc(handler))
+        curr = lastMiddleware(http.HandlerFunc(handler))
         for i := len(middlewares) - 2; i >= 0; i-- {
+            fmt.Println(middlewares[i], "iterando sobre middleware")
             curr = middlewares[i](curr)
         }
     } else {
         curr = http.HandlerFunc(handler)
     }
+    if curr == nil {
+        log.Fatal("Path", path, "is missing handler")
+        panic(errors.New("Missing handler"))
+    }
+    fmt.Println(method, path)
     self.server.Handle(path, self.methodMiddleware(method)(curr))
 }
 func (self CustomServer) Get(path string, handler func(w http.ResponseWriter, r *http.Request), middlewares ...Middleware) {
