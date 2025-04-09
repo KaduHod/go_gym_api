@@ -45,5 +45,5 @@ func (self LoginController) Auth(w http.ResponseWriter, r *http.Request) {
         self.InternalServerError(w, r, err)
         return
     }
-    self.Controller.Dashboard(w, r)
+    http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }

@@ -32,17 +32,19 @@ func (self Controller) InternalServerError(w http.ResponseWriter, r *http.Reques
 func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
     sessionExists, err := self.SessionService.SessionExists(r)
     if err != nil {
+        fmt.Println("Aqui, erro sessao nao existe")
         self.InternalServerError(w, r, err)
         return
     }
     if sessionExists {
-        self.Dashboard(w, r)
+        http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
         return
     }
     data := map[string]interface{}{
         "Link": self.GitHubService.GetAuthUri(),
     }
     self.Render(&w, "login.html", data)
+    return
 }
 func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
     sessionExists, err := self.SessionService.SessionExists(r)
@@ -51,6 +53,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         return
     }
     if !sessionExists {
+        fmt.Println("Passando aqui")
         self.Index(w, r)
         return
     }
@@ -86,8 +89,9 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         "Tokens": tokens,
         "Csrf": userSession.CsrfToken.Token,
     }
-    fmt.Println(data)
+    //fmt.Println(data)
     self.Render(&w, "dashboard.html", data)
+    return
 }
 type MetaData struct {
 	TotalItens int `json:"total_itens"`

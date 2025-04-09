@@ -46,6 +46,7 @@ func (m *CsrfService) generateToken() (string, error) {
 	token := base64.URLEncoding.EncodeToString(hash[:])
 	return token, nil
 }
+
 func (m *CsrfService) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Para requisições GET, HEAD, OPTIONS - apenas gerar token

@@ -1,6 +1,10 @@
 package core
 
-import "time"
+import (
+	"net/http"
+	"time"
+)
+type HttpDefaultHandler func(http.ResponseWriter, *http.Request) func(http.ResponseWriter, *http.Request)
 type CsrfTokenInfo struct {
 	Token      string
 	Expiration time.Time

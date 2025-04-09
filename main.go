@@ -8,6 +8,7 @@ import (
 	"KaduHod/muscles_api/src/services"
 	"log"
 	"net/http"
+	"time"
 
 	_ "github.com/swaggo/http-swagger" // http-swagger middleware
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -20,6 +21,23 @@ import (
 // @description API for Muscles System
 // @host gymapi.kadu.tec.br
 // @BasePath /api/v1
+type Middleware func(http.Handler) http.Handler
+func Use(handler http.Handler, middlewares ...Middleware) http.Handler {
+	for i := len(middlewares) - 1; i >= 0; i-- {
+		handler = middlewares[i](handler)
+	}
+	return handler
+}
+
+func Logger() Middleware {
+    return func(next http.Handler) http.Handler {
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+            start := time.Now()
+            next.ServeHTTP(w, r)
+            log.Printf("[ %s ] %s %s",r.Method, r.URL.Path, time.Since(start))
+        })
+    }
+}
 func main() {
     if err := godotenv.Load(".env"); err != nil {
         log.Fatal(err)
@@ -69,6 +87,8 @@ func main() {
     server.HandleFunc("/docs/", httpSwagger.WrapHandler)
     server.HandleFunc("/", controller.Index)
     server.HandleFunc("/auth/github", loginController.Auth)
-    server.HandleFunc("/dashboard", controller.Dashboard)
-    http.ListenAndServe(":3005", server)
+    dashboardHandler := http.HandlerFunc(controller.Dashboard)
+    server.Handle("/dashboard", csrfService.Middleware(dashboardHandler))
+    handler := Use(server, Logger())
+    http.ListenAndServe(":3005", handler)
 }
