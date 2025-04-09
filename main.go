@@ -8,7 +8,6 @@ import (
 	"KaduHod/muscles_api/src/services"
 	"log"
 	"net/http"
-	"time"
 
 	_ "github.com/swaggo/http-swagger" // http-swagger middleware
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -16,12 +15,23 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// @title Musculo Eskeletal Api
-// @version 1.0
-// @description API for Muscles System
-// @host gymapi.kadu.tec.br
-// @BasePath /api/v1
 type Middleware func(http.Handler) http.Handler
+// MethodMiddleware cria um middleware que verifica se o método HTTP da requisição
+// corresponde ao método especificado.
+func MethodMiddleware(method string) Middleware {
+    return func(next http.Handler) http.Handler {
+        return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+            // Verifica se o método da requisição corresponde ao método esperado
+            if r.Method != method {
+                http.NotFound(w, r)
+                return
+            }
+            // Se o método estiver correto, continua para o próximo handler
+            next.ServeHTTP(w, r)
+        })
+    }
+}
+
 func Use(handler http.Handler, middlewares ...Middleware) http.Handler {
 	for i := len(middlewares) - 1; i >= 0; i-- {
 		handler = middlewares[i](handler)
@@ -32,12 +42,16 @@ func Use(handler http.Handler, middlewares ...Middleware) http.Handler {
 func Logger() Middleware {
     return func(next http.Handler) http.Handler {
         return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-            start := time.Now()
+            log.Printf("[ %s ] %s",r.Method, r.URL.Path)
             next.ServeHTTP(w, r)
-            log.Printf("[ %s ] %s %s",r.Method, r.URL.Path, time.Since(start))
         })
     }
 }
+// @title Musculo Eskeletal Api
+// @version 1.0
+// @description API for Muscles System
+// @host gymapi.kadu.tec.br
+// @BasePath /api/v1
 func main() {
     if err := godotenv.Load(".env"); err != nil {
         log.Fatal(err)
@@ -77,18 +91,30 @@ func main() {
         UserRepository: &userRepository,
         CsrfService: csrfService,
     }
+    userController := controllers.UserController{
+        Controller: controller,
+        TokenService: &tokenService,
+        UserRepository: &userRepository,
+        SessionService: &sessionService,
+    }
     server := http.NewServeMux()
-    server.HandleFunc("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
-    server.HandleFunc("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
-    server.HandleFunc("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
-    server.HandleFunc("/api/v1/muscles", musculoSkeletalController.ListMuscles)
-    server.HandleFunc("/api/v1/joints", musculoSkeletalController.ListJoints)
-    server.HandleFunc("/api/v1/movements", musculoSkeletalController.ListMoviments)
-    server.HandleFunc("/docs/", httpSwagger.WrapHandler)
-    server.HandleFunc("/", controller.Index)
-    server.HandleFunc("/auth/github", loginController.Auth)
-    dashboardHandler := http.HandlerFunc(controller.Dashboard)
-    server.Handle("/dashboard", csrfService.Middleware(dashboardHandler))
+    carlosServer := CustomServer{server: server}
+    // Rotas GET convertidas para usar o método Get do CustomServer
+    carlosServer.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
+    carlosServer.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
+    carlosServer.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
+    carlosServer.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
+    carlosServer.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
+    carlosServer.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
+
+    // Rotas HandleFunc convertidas para HandleFunc do CustomServer
+    carlosServer.Get("/docs/", httpSwagger.WrapHandler)
+    carlosServer.Get("/", controller.Index)
+    carlosServer.Get("/auth/github", loginController.Auth)
+
+    // Rotas com middleware convertidas
+    carlosServer.Post("/token", userController.CreateToken, csrfService.Middleware)
+    carlosServer.Get("/dashboard", controller.Dashboard, csrfService.Middleware)
     handler := Use(server, Logger())
     http.ListenAndServe(":3005", handler)
 }
