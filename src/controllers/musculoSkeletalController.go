@@ -22,8 +22,10 @@ type MusculoSkeletalController struct {
 // @Tags Musculoskeletal
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} controllers.ResponseSwegger{data=[]core.MuscleGroup,metadata=controllers.MetaData}
-// @Failure 500 {object} controllers.ResponseSwegger{data=string}
+// @Success 200 {object} controllers.ResponseDescription{data=[]core.MuscleGroup,metadata=controllers.MetaData}
+// @Failure 500 {object} controllers.ResponseDescription{data=string}
+// @Security BearerAuth
+// @Failure 401 {object} controllers.ResponseUnauthorized
 // @Router /muscles/groups [get]
 func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MuscleRepository.GetAll()
@@ -45,8 +47,10 @@ func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r 
 // @Tags Musculoskeletal
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} controllers.ResponseSwegger{data=[]core.MusclePortion,metadata=controllers.MetaData}
-// @Failure 500 {object} controllers.ResponseSwegger{data=string}
+// @Success 200 {object} controllers.ResponseDescription{data=[]core.MusclePortion,metadata=controllers.MetaData}
+// @Failure 500 {object} controllers.ResponseDescription{data=string}
+// @Security BearerAuth
+// @Failure 401 {object} controllers.ResponseUnauthorized
 // @Router /muscles/portions [get]
 func (self MusculoSkeletalController) ListMusclePortions(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MuscleRepository.GetAllPortions()
@@ -67,8 +71,10 @@ func (self MusculoSkeletalController) ListMusclePortions(w http.ResponseWriter, 
 // @Tags Musculoskeletal
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} controllers.ResponseSwegger{data=[]core.MuscleGroup,metadata=controllers.MetaData}
-// @Failure 500 {object} controllers.ResponseSwegger{data=string}
+// @Success 200 {object} controllers.ResponseDescription{data=[]core.MuscleGroup,metadata=controllers.MetaData}
+// @Failure 500 {object} controllers.ResponseDescription{data=string}
+// @Security BearerAuth
+// @Failure 401 {object} controllers.ResponseUnauthorized
 // @Router /muscles [get]
 func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MuscleRepository.GetWithPortions()
@@ -90,8 +96,10 @@ func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http
 // @Tags Musculoskeletal
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} controllers.ResponseSwegger{data=[]core.Joint,metadata=controllers.MetaData}
-// @Failure 500 {object} controllers.ResponseSwegger{data=string}
+// @Success 200 {object} controllers.ResponseDescription{data=[]core.Joint,metadata=controllers.MetaData}
+// @Failure 500 {object} controllers.ResponseDescription{data=string}
+// @Security BearerAuth
+// @Failure 401 {object} controllers.ResponseUnauthorized
 // @Router /joints [get]
 func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.Request) {
     resources, err := self.JointRepository.GetAll()
@@ -112,8 +120,10 @@ func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.
 // @Tags Musculoskeletal
 // @Accept  json
 // @Produce  json
-// @Success 200 {object} controllers.ResponseSwegger{data=[]core.Movement,metadata=controllers.MetaData}
-// @Failure 500 {object} controllers.ResponseSwegger{data=string}
+// @Success 200 {object} controllers.ResponseDescription{data=[]core.Movement,metadata=controllers.MetaData}
+// @Failure 500 {object} controllers.ResponseDescription{data=string}
+// @Security BearerAuth
+// @Failure 401 {object} controllers.ResponseUnauthorized
 // @Router /movements [get]
 func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MovementRepository.GetAll()
@@ -138,8 +148,10 @@ func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *ht
 // @Param muscle_portion query string false "Filter by muscle portion name"
 // @Param joint query string false "Filter by joint name"
 // @Param movement query string false "Filter by movement name"
-// @Success 200 {object} controllers.ResponseSwegger{data=[]core.MuscleMovementInfo,metadata=controllers.MetaData}
-// @Failure 500 {object} controllers.ResponseSwegger{data=string}
+// @Success 200 {object} controllers.ResponseDescription{data=[]core.MuscleMovementInfo,metadata=controllers.MetaData}
+// @Failure 500 {object} controllers.ResponseDescription{data=string}
+// @Security BearerAuth
+// @Failure 401 {object} controllers.ResponseUnauthorized
 // @Router /muscles/movement-map [get]
 func (self MusculoSkeletalController) ListAmm(w http.ResponseWriter, r *http.Request) {
     filters := map[string]string{

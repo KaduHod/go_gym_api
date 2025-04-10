@@ -17,6 +17,11 @@ const docTemplate = `{
     "paths": {
         "/joints": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a list of all joints",
                 "consumes": [
                     "application/json"
@@ -34,7 +39,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -53,12 +58,18 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -76,6 +87,11 @@ const docTemplate = `{
         },
         "/movements": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a list of all possible movements",
                 "consumes": [
                     "application/json"
@@ -93,7 +109,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -112,12 +128,18 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -135,6 +157,11 @@ const docTemplate = `{
         },
         "/muscles": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a hierarchical list of all muscle groups with their portions",
                 "consumes": [
                     "application/json"
@@ -152,7 +179,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -171,12 +198,18 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -194,6 +227,11 @@ const docTemplate = `{
         },
         "/muscles/groups": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a list of all muscle groups without their portions",
                 "consumes": [
                     "application/json"
@@ -211,7 +249,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -230,12 +268,18 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -253,6 +297,11 @@ const docTemplate = `{
         },
         "/muscles/movement-map": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a list of all muscle-movement-joint relationships with optional filtering",
                 "consumes": [
                     "application/json"
@@ -296,7 +345,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -315,12 +364,18 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -338,6 +393,11 @@ const docTemplate = `{
         },
         "/muscles/portions": {
             "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
                 "description": "Get a list of all muscle portions with their group IDs",
                 "consumes": [
                     "application/json"
@@ -355,7 +415,7 @@ const docTemplate = `{
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -374,12 +434,18 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
                             "allOf": [
                                 {
-                                    "$ref": "#/definitions/controllers.ResponseSwegger"
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
                                 },
                                 {
                                     "type": "object",
@@ -405,7 +471,7 @@ const docTemplate = `{
                 }
             }
         },
-        "controllers.ResponseSwegger": {
+        "controllers.ResponseDescription": {
             "type": "object",
             "properties": {
                 "data": {},
@@ -413,6 +479,14 @@ const docTemplate = `{
                     "$ref": "#/definitions/controllers.MetaData"
                 },
                 "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "controllers.ResponseUnauthorized": {
+            "type": "object",
+            "properties": {
+                "message": {
                     "type": "string"
                 }
             }
@@ -487,13 +561,21 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "description": "Type \"Bearer\" followed by a space tour Token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3005",
+	Host:             "gymapi.kadu.tec.br",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Musculo Eskeletal Api",

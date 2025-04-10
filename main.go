@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "KaduHod/muscles_api/docs"
 	"KaduHod/muscles_api/src/auth"
 	"KaduHod/muscles_api/src/controllers"
 	"KaduHod/muscles_api/src/database"
@@ -13,8 +12,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 
-	_ "github.com/swaggo/http-swagger" // http-swagger middleware
-	httpSwagger "github.com/swaggo/http-swagger"
+    _ "KaduHod/muscles_api/docs"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 
 	"github.com/joho/godotenv"
 )
@@ -56,6 +55,10 @@ func Logger() Middleware {
 // @description API for Muscles System
 // @host gymapi.kadu.tec.br
 // @BasePath /api/v1
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+// @description Type "Bearer" followed by a space tour Token.
 func main() {
     if err := godotenv.Load(".env"); err != nil {
         log.Fatal(err)
@@ -110,17 +113,11 @@ func main() {
     server.Use(middleware.Logger)
     server.Use(middleware.Recoverer)
     server.Use(middleware.RealIP)
-    server.Group(func(r chi.Router) {
-        r.Use(authService.Middleware)
-        r.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
-        r.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
-        r.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
-        r.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
-        r.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
-        r.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
-    })
 
-    server.Get("/docs/", httpSwagger.WrapHandler)
+
+    server.Get("/docs/*", httpSwagger.Handler(
+        httpSwagger.URL("http://localhost:3005/docs/doc.json"), //The url pointing to API definition
+    ))
     server.Get("/", controller.Index)
     server.Get("/auth/github", loginController.Auth)
     server.Get("/tokens", userController.ListTokens)
@@ -131,5 +128,14 @@ func main() {
     })
     server.Get("/info", controller.Info)
     server.Get("/dashboard", controller.Dashboard)
+    server.Group(func(r chi.Router) {
+        r.Use(authService.Middleware)
+        r.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
+        r.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
+        r.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
+        r.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
+        r.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
+        r.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
+    })
     http.ListenAndServe(":3005", server)
 }

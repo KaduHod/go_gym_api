@@ -12,7 +12,33 @@ const authToken = "Bearer IkaCFL4eYMjysMQtW3dcIQ==:S2FkdUhvZA=="
 
 func TestMusculoSkeletalRoutes(t *testing.T) {
 	client := &http.Client{}
+    t.Run("Unauthorized", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", baseURL+"/muscles/groups", nil)
+		req.Header.Add("Authorization", "Bearer wrong_token")
+		resp, _ := client.Do(req)
 
+		assert.Equal(t, http.StatusUnauthorized, resp.StatusCode)
+    })
+    t.Run("Unauthorized without token", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", baseURL+"/muscles/groups", nil)
+		resp, _ := client.Do(req)
+
+		assert.Equal(t, http.StatusUnauthorized, resp.StatusCode)
+    })
+    t.Run("Unauthorized invalid header", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", baseURL+"/muscles/groups", nil)
+		req.Header.Add("Authorization", "wrong_token")
+		resp, _ := client.Do(req)
+
+		assert.Equal(t, http.StatusUnauthorized, resp.StatusCode)
+    })
+    t.Run("Unauthorized header without bearer string", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", baseURL+"/muscles/groups", nil)
+		req.Header.Add("Authorization", "IkaCFL4eYMjysMQtW3dcIQ==:S2FkdUhvZA==")
+		resp, _ := client.Do(req)
+
+		assert.Equal(t, http.StatusUnauthorized, resp.StatusCode)
+    })
 	t.Run("ListMuscleGroups - Success", func(t *testing.T) {
 		req, _ := http.NewRequest("GET", baseURL+"/muscles/groups", nil)
 		req.Header.Add("Authorization", authToken)

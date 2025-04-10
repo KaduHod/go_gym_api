@@ -139,10 +139,13 @@ type Response[T any] struct {
 	Data     T       `json:"data"`
 	MetaData MetaData `json:"metadata"`
 }
-type ResponseSwegger struct {
+type ResponseDescription struct {
 	Status   string  `json:"status"`
     Data     interface {}       `json:"data"`
 	MetaData MetaData `json:"metadata"`
+}
+type ResponseUnauthorized struct {
+    Message string  `json:"message" exemple:"unauthorized"`
 }
 func SuccessResponse[T any](w http.ResponseWriter, data T, totalItems int) {
 	w.Header().Set("Content-Type", "application/json")

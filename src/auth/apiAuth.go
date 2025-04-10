@@ -15,7 +15,7 @@ func (self *ApiAuthService) Middleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
         tokenBearer := r.Header.Get("Authorization")
         if tokenBearer == "" {
-            w.WriteHeader(http.StatusUnauthorized)
+            self.Unauthorized(w)
             return
         }
         if !strings.Contains(tokenBearer, "Bearer") {
@@ -25,14 +25,17 @@ func (self *ApiAuthService) Middleware(next http.Handler) http.Handler {
         tokenBearer = strings.Replace(tokenBearer, "Bearer ", "", 1)
         login, err := self.TokenService.GetUserFromToken(tokenBearer)
         if err != nil {
+            if strings.Contains(err.Error(),"illegal base64") || err.Error() == "formato de token inválido" {
+                self.Unauthorized(w)
+            } else {
+                w.WriteHeader(http.StatusInternalServerError)
+            }
             fmt.Println(err)
-            w.WriteHeader(http.StatusInternalServerError)
             return
         }
         tokens, err := self.TokenRepository.GetTokensByLogin(login)
         if err != nil {
-            fmt.Println(err)
-            w.WriteHeader(http.StatusInternalServerError)
+            self.Unauthorized(w)
             return
         }
         var valid bool
@@ -44,9 +47,14 @@ func (self *ApiAuthService) Middleware(next http.Handler) http.Handler {
             }
         }
         if !valid {
-            w.WriteHeader(http.StatusUnauthorized)
+            self.Unauthorized(w)
             return
         }
         next.ServeHTTP(w, r)
     })
+}
+func (self ApiAuthService) Unauthorized(w http.ResponseWriter) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusUnauthorized)
+    w.Write([]byte(`{"message":"Unauthorized"}`))
 }
