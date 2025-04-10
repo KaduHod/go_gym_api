@@ -9,7 +9,7 @@ type TokenRepository struct {
 }
 
 func (self TokenRepository) GetTokens(user core.ApiUser) ([]core.UserAPIToken, error) {
-    query := `SELECT id, token_name, token_hash, created_at, deleted_at, user_id FROM user_api_tokens WHERE user_id = ? AND deleted_at IS NULL`
+    query := `SELECT id, token_name, token_hash, created_at, user_id FROM user_api_tokens WHERE user_id = ? AND deleted_at IS NULL`
     rows, err := self.Db.Query(query, user.Id)
     var resources []core.UserAPIToken
     if err != nil {
@@ -20,7 +20,7 @@ func (self TokenRepository) GetTokens(user core.ApiUser) ([]core.UserAPIToken, e
     }
     for rows.Next() {
         var resource core.UserAPIToken
-        if err := rows.Scan(&resource.Id, &resource.TokenName, &resource.TokenHash, &resource.CreatedAt, &resource.DeletedAt, &resource.UserId); err != nil {
+        if err := rows.Scan(&resource.Id, &resource.TokenName, &resource.TokenHash, &resource.CreatedAt, &resource.UserId); err != nil {
             return resources, err
         }
         resources = append(resources, resource)

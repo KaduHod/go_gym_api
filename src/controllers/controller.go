@@ -55,7 +55,7 @@ func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
     data := map[string]interface{}{
         "Link": self.GitHubService.GetAuthUri(),
     }
-    self.Render(&w, data, "login.html")
+    self.Render(&w, data, "login.html", "header.html")
     return
 }
 func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
@@ -100,7 +100,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         "Tokens": tokens,
         "Csrf": userSession.CsrfToken.Token,
     }
-    self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html")
+    self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html", "header.html")
     return
 }
 type MetaData struct {

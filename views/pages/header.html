@@ -1,0 +1,23 @@
+{{define "header"}}
+<header class="bg-white border-b shadow-sm px-6 py-4 flex items-center justify-between">
+
+  <!-- Área do usuário -->
+  <div class="flex items-center space-x-4">
+    {{if .User}}
+      <!-- Avatar GitHub -->
+      <img src="{{.User.AvatarURL}}" alt="Avatar GitHub" class="w-10 h-10 rounded-full border" />
+
+      <!-- Nome de login -->
+      <span class="text-gray-800 font-medium text-sm">@{{.User.Login}}</span>
+    {{end}}
+  </div>
+
+  <!-- Link para a documentação -->
+  <a href="/docs/index.html#/"
+     target="_blank"
+     class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
+    📚 Documentação da API
+  </a>
+
+</header>
+{{end}}

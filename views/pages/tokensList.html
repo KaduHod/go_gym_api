@@ -1,24 +1,35 @@
 {{define "tokensList"}}
-<ul class="flex flex-col divide-gray-200 border rounded">
-    {{$csrf := .Csrf}}
-    {{range .Tokens}}
-    <li class="px-4 py-2 flex items-center justify-between">
-        <span class="text-gray-800">{{.TokenName}}</span>
-        <button
-            hx-delete="/token/{{.Id}}"
-            hx-target="closest li"
-            hx-headers='{"X-CSRF-Token": "{{$csrf}}"}'
-            hx-swap="outerHTML remove"
-            class="text-red-600 hover:text-red-800 p-1 rounded"
-            title="Excluir token"
-            >
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-    </li>
-    {{else}}
-    <li class="px-4 py-2 text-gray-500 italic">Nenhum token criado ainda.</li>
-    {{end}}
+<ul class="flex flex-col divide-y divide-gray-200 border rounded-md overflow-hidden shadow-sm">
+  {{$csrf := .Csrf}}
+  {{range .Tokens}}
+  <li class="flex items-center justify-between px-4 py-3 bg-white hover:bg-gray-50 transition">
+
+    <div class="flex items-center space-x-3">
+      <!-- Emoji de chave -->
+      <span class="text-xl">🔑</span>
+
+      <div>
+        <p class="font-medium text-gray-800">{{.TokenName}}</p>
+        <p class="text-xs text-gray-500">Criado em {{ .CreatedAt.Format "02/01/2006 15:04" }}</p>
+      </div>
+    </div>
+
+    <!-- Botão de deletar com emoji -->
+    <button
+      hx-delete="/token/{{.Id}}"
+      hx-target="closest li"
+      hx-headers='{"X-CSRF-Token": "{{$csrf}}"}'
+      hx-swap="outerHTML remove"
+      class="text-red-600 hover:text-red-800 hover:bg-red-50 hover:cursor-pointer p-2 rounded-full transition text-lg"
+      title="Excluir token"
+    >
+      🗑️
+    </button>
+
+  </li>
+  {{else}}
+  <li class="px-4 py-3 text-gray-500 italic bg-gray-50">Nenhum token criado ainda.</li>
+  {{end}}
 </ul>
 {{end}}
+

@@ -8,6 +8,17 @@
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     </head>
     <body>
+        {{ template "header" . }}
         {{template "content" . }}
     </body>
+    <script>
+        function copyToken() {
+            const tokenText = document.getElementById("tokenValue").innerText.replace("Token:", "").trim();
+            navigator.clipboard.writeText(tokenText).then(() => {
+                const feedback = document.getElementById("copyFeedback");
+                feedback.classList.remove("hidden");
+                setTimeout(() => feedback.classList.add("hidden"), 3000);
+            });
+        }
+    </script>
 </html>

@@ -1,9 +1,30 @@
 {{define "tokenCreated" }}
-  <div class="bg-green-100 border border-green-300 rounded-lg p-4 shadow">
+  <div id="tokenAlert" class="relative bg-green-100 border border-green-300 rounded-lg p-4 shadow">
+
+    <!-- Botão de fechar -->
+    <button onclick="document.getElementById('tokenAlert').remove()" class="absolute top-2 right-2 text-green-800 hover:text-green-900 font-bold text-lg">
+      &times;
+    </button>
+
     <h2 class="text-xl font-semibold text-green-800 mb-2">Token criado</h2>
-    <div class="space-y-1">
+
+    <!-- Aviso importante -->
+    <p class="text-sm text-red-600 mb-2">
+      Atenção: essa é a única vez que o token será exibido. Copie e salve-o em um local seguro.
+    </p>
+
+    <div class="space-y-1 mb-2">
       <span class="block text-sm text-gray-700"><strong>Nome:</strong> {{ .TokenName }}</span>
-      <span class="block text-sm text-gray-700"><strong>Token:</strong> {{ .TokenCreated }}</span>
+      <span id="tokenValue" class="block text-sm text-gray-700"><strong>Token:</strong> {{ .TokenCreated }}</span>
     </div>
+
+    <!-- Botão de copiar -->
+    <button onclick="copyToken()" class="text-sm px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700">
+      Copiar token
+    </button>
+
+    <!-- Feedback de cópia -->
+    <span id="copyFeedback" class="text-sm text-green-700 ml-2 hidden">Token copiado!</span>
+
   </div>
 {{end}}
