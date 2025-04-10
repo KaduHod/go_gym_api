@@ -120,7 +120,6 @@ func main() {
     server.Use(middleware.Logger)
     server.Use(middleware.Recoverer)
     server.Use(middleware.RealIP)
-    server.Use(cacheService.Middleware)
     server.Get("/auth/github", loginController.Auth)
     server.Get("/docs/*", httpSwagger.Handler(
         httpSwagger.URL("http://localhost:3005/docs/doc.json"), //The url pointing to API definition
@@ -146,6 +145,7 @@ func main() {
     server.Get("/dashboard", controller.Dashboard)
     server.Group(func(r chi.Router) {
         r.Use(authService.Middleware)
+        r.Use(cacheService.Middleware)
         r.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
         r.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
         r.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
