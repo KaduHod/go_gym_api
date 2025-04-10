@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "KaduHod/muscles_api/docs"
+	"KaduHod/muscles_api/src/auth"
 	"KaduHod/muscles_api/src/controllers"
 	"KaduHod/muscles_api/src/database"
 	repository "KaduHod/muscles_api/src/repositorys"
@@ -73,6 +74,10 @@ func main() {
     sessionService := services.SessionService{Redis: redis}
     tokenService := services.NewTokenService(&userRepository, &tokenRepository)
     csrfService := services.NewCsrfService(&sessionService)
+    authService := auth.ApiAuthService{
+        TokenRepository: &tokenRepository,
+        TokenService: &tokenService,
+    }
     controller := controllers.Controller{
         UserRepository: &userRepository,
         SessionService: &sessionService,
@@ -105,12 +110,15 @@ func main() {
     server.Use(middleware.Logger)
     server.Use(middleware.Recoverer)
     server.Use(middleware.RealIP)
-    server.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
-    server.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
-    server.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
-    server.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
-    server.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
-    server.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
+    server.Group(func(r chi.Router) {
+        r.Use(authService.Middleware)
+        r.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
+        r.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
+        r.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
+        r.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
+        r.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
+        r.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
+    })
 
     server.Get("/docs/", httpSwagger.WrapHandler)
     server.Get("/", controller.Index)

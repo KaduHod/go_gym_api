@@ -259,4 +259,10 @@ func TestRepositorys(t *testing.T) {
             t.Fatal(err)
         }
     })
+    t.Run("Token :: Get Tokens by login", func(t *testing.T) {
+        _, err := tokenRepository.GetTokensByLogin("KaduHod")
+        if err != nil {
+            t.Fatal(err)
+        }
+    })
 }
