@@ -41,6 +41,15 @@ func (self Controller) RenderPage(w http.ResponseWriter, data interface{}, pageN
         self.InternalServerError(w, nil, err)
     }
 }
+func (self Controller) Info(w http.ResponseWriter, r *http.Request) {
+    tmpl, err := template.ParseFiles("views/pages/appDescription.html")
+    if err != nil {
+        self.InternalServerError(w, r, err)
+        return
+    }
+    tmpl.ExecuteTemplate(w, "appDescription", nil)
+    return
+}
 func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
     sessionExists, err := self.SessionService.SessionExists(r)
     if err != nil {
@@ -55,7 +64,7 @@ func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
     data := map[string]interface{}{
         "Link": self.GitHubService.GetAuthUri(),
     }
-    self.Render(&w, data, "login.html", "header.html")
+    self.Render(&w, data, "login.html", "header.html", "appDescription.html")
     return
 }
 func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
@@ -100,7 +109,22 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         "Tokens": tokens,
         "Csrf": userSession.CsrfToken.Token,
     }
-    self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html", "header.html")
+    pages := []string{"dashboard.html", "tokens.html", "tokensList.html", "appDescription.html"}
+    if r.URL.Query().Get("page") == "1" {
+        for i, page := range pages {
+           pages[i] = "views/pages/" + page
+        }
+        tmpl, err := template.ParseFiles(pages...)
+        if err != nil {
+            self.InternalServerError(w, r, err)
+            return
+        }
+        if err := tmpl.ExecuteTemplate(w, "content", data); err != nil {
+            self.InternalServerError(w, r, err)
+        }
+        return
+    }
+    self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html", "header.html", "appDescription.html")
     return
 }
 type MetaData struct {

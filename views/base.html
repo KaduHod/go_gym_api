@@ -9,7 +9,9 @@
     </head>
     <body>
         {{ template "header" . }}
-        {{template "content" . }}
+        <main>
+            {{ template "content" . }}
+        </main>
     </body>
     <script>
         function copyToken() {

@@ -9,15 +9,38 @@
 
       <!-- Nome de login -->
       <span class="text-gray-800 font-medium text-sm">@{{.User.Login}}</span>
+    {{else}}
+    <div class="flex items-center justify-center bg-gray-100">
+        <a href="{{.Link}}" class="px-6 py-3 bg-gray-800 text-white font-semibold rounded shadow hover:bg-gray-700 transition">
+            Login com GitHub para obter a chave de api
+        </a>
+    </div>
     {{end}}
   </div>
 
-  <!-- Link para a documentação -->
-  <a href="/docs/index.html#/"
-     target="_blank"
-     class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
-    📚 Documentação da API
-  </a>
+  <div class="flex items-center space-x-6">
+    <!-- Botão para ver descrição da API -->
+    <a hx-get="/info" hx-target="main"
+       class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
+      🧬 Sobre a API
+    </a>
+
+    <!-- Link para a documentação -->
+    <a href="/docs/index.html#/"
+       target="_blank"
+       class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
+      📚 Documentação da API
+    </a>
+
+    {{if .User}}
+    <!-- Link para o dashboard da API -->
+    <a hx-get="/dashboard?page=1" hx-target="main"
+       class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
+      🧪 Dashboard da API
+    </a>
+    {{end}}
+  </div>
 
 </header>
 {{end}}
+

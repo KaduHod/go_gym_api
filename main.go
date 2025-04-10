@@ -1,8 +1,6 @@
 package main
 
 import (
-    "github.com/go-chi/chi/v5"
-    "github.com/go-chi/chi/v5/middleware"
 	_ "KaduHod/muscles_api/docs"
 	"KaduHod/muscles_api/src/controllers"
 	"KaduHod/muscles_api/src/database"
@@ -10,6 +8,9 @@ import (
 	"KaduHod/muscles_api/src/services"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 
 	_ "github.com/swaggo/http-swagger" // http-swagger middleware
 	httpSwagger "github.com/swaggo/http-swagger"
@@ -120,6 +121,7 @@ func main() {
         server.Post("/token", userController.CreateToken)
         server.Delete("/token/{id}", userController.DeleteToken)
     })
+    server.Get("/info", controller.Info)
     server.Get("/dashboard", controller.Dashboard)
     http.ListenAndServe(":3005", server)
 }
