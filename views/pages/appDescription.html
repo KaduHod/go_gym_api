@@ -1,43 +1,43 @@
 {{define "appDescription"}}
 <section class="max-w-5xl mx-auto px-6 py-10 text-gray-800">
-  <h1 class="text-4xl font-bold mb-4">🧬 Musculo Eskeletal API</h1>
+    <h1 class="text-4xl font-bold mb-4">🧬 Musculo Eskeletal API</h1>
 
-  <h2 class="text-2xl font-semibold mt-8 mb-2">📖 Descrição</h2>
-  <p class="text-gray-700 mb-6">
+    <h2 class="text-2xl font-semibold mt-8 mb-2">📖 Descrição</h2>
+    <p class="text-gray-700 mb-6">
     A Musculo Eskeletal API oferece acesso a informações estruturadas sobre o sistema musculoesquelético humano.
     Esta API é projetada para aplicações que requerem dados sobre músculos, articulações, movimentos e relações entre eles,
     como sistemas de anatomia, biomecânica ou plataformas de educação médica.
-  </p>
+    </p>
 
-  <h2 class="text-2xl font-semibold mt-10 mb-2">🚀 Principais recursos</h2>
-  <p class="text-gray-700 mb-4">Através dos endpoints disponíveis, você pode:</p>
-  <ul class="list-disc list-inside space-y-2 pl-4 text-gray-700">
-    <li>🔹 Listar todas as articulações (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/joints</code>)</li>
-    <li>🔹 Consultar os movimentos possíveis (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/movements</code>)</li>
-    <li>🔹 Obter uma hierarquia de grupos musculares e suas porções (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles</code>)</li>
-    <li>🔹 Acessar o mapeamento entre músculos, movimentos e articulações (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles/movement-map</code>)</li>
-    <li>🔹 Consultar porções musculares isoladas (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles/portions</code>)</li>
-    <li>🔹 Listar apenas os grupos musculares (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles/groups</code>)</li>
-  </ul>
-
-  <h2 class="text-2xl font-semibold mt-10 mb-2">⚙️ Informações técnicas</h2>
-  <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
-    <li><strong>Versão:</strong> 1.0</li>
-    <li><strong>Base URL:</strong> <code class="bg-gray-100 px-2 py-0.5 rounded text-sm">https://gymapi.kadu.tec.br/api/v1</code></li>
-    <li><strong>Formato de dados:</strong> JSON (<code class="text-sm">application/json</code>)</li>
-  </ul>
-
-  <div class="mt-6">
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">Status de resposta padrão:</h3>
-    <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
-      <li><code class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-sm">200 OK</code>: Requisição bem-sucedida</li>
-      <li><code class="bg-red-100 text-red-800 px-2 py-0.5 rounded text-sm">500 Internal Server Error</code>: Erro inesperado no servidor</li>
+    <h2 class="text-2xl font-semibold mt-10 mb-2">🚀 Principais recursos</h2>
+    <p class="text-gray-700 mb-4">Através dos endpoints disponíveis, você pode:</p>
+    <ul class="list-disc list-inside space-y-2 pl-4 text-gray-700">
+        <li>🔹 Listar todas as articulações (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/joints</code>)</li>
+        <li>🔹 Consultar os movimentos possíveis (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/movements</code>)</li>
+        <li>🔹 Obter uma hierarquia de grupos musculares e suas porções (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles</code>)</li>
+        <li>🔹 Acessar o mapeamento entre músculos, movimentos e articulações (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles/movement-map</code>)</li>
+        <li>🔹 Consultar porções musculares isoladas (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles/portions</code>)</li>
+        <li>🔹 Listar apenas os grupos musculares (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles/groups</code>)</li>
     </ul>
-  </div>
 
-  <h2 class="text-2xl font-semibold mt-10 mb-2">🧩 Estrutura de resposta padrão</h2>
-  <p class="text-gray-700 mb-2">Todas as respostas seguem o formato:</p>
-  <pre class="bg-gray-100 p-4 rounded text-sm text-gray-800 overflow-x-auto">
+    <h2 class="text-2xl font-semibold mt-10 mb-2">⚙️ Informações técnicas</h2>
+    <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
+        <li><strong>Versão:</strong> 1.0</li>
+        <li><strong>Base URL:</strong> <code class="bg-gray-100 px-2 py-0.5 rounded text-sm">https://gymapi.kadu.tec.br/api/v1</code></li>
+        <li><strong>Formato de dados:</strong> JSON (<code class="text-sm">application/json</code>)</li>
+    </ul>
+
+    <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">Status de resposta padrão:</h3>
+        <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
+            <li><code class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-sm">200 OK</code>: Requisição bem-sucedida</li>
+            <li><code class="bg-red-100 text-red-800 px-2 py-0.5 rounded text-sm">500 Internal Server Error</code>: Erro inesperado no servidor</li>
+        </ul>
+    </div>
+
+    <h2 class="text-2xl font-semibold mt-10 mb-2">🧩 Estrutura de resposta padrão</h2>
+    <p class="text-gray-700 mb-2">Todas as respostas seguem o formato:</p>
+    <pre class="bg-gray-100 p-4 rounded text-sm text-gray-800 overflow-x-auto">
 {
   "status": "success",
   "data": [...],
@@ -45,16 +45,17 @@
     "total_itens": 123
   }
 }
-  </pre>
+    </pre>
 
-  <h2 class="text-2xl font-semibold mt-10 mb-2">🔍 Filtros disponíveis (exemplo: <code>/muscles/movement-map</code>)</h2>
-  <p class="text-gray-700 mb-2">Você pode utilizar filtros de query string para personalizar a busca:</p>
-  <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
-    <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">muscle_group</code>: Filtrar por grupo muscular</li>
-    <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">muscle_portion</code>: Filtrar por porção muscular</li>
-    <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">joint</code>: Filtrar por articulação</li>
-    <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">movement</code>: Filtrar por movimento</li>
-  </ul>
+    <h2 class="text-2xl font-semibold mt-10 mb-2">🔍 Filtros disponíveis (exemplo: <code>/muscles/movement-map</code>)</h2>
+    <p class="text-gray-700 mb-2">Você pode utilizar filtros de query string para personalizar a busca:</p>
+    <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">muscle_group</code>: Filtrar por grupo muscular</li>
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">muscle_portion</code>: Filtrar por porção muscular</li>
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">joint</code>: Filtrar por articulação</li>
+        <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">movement</code>: Filtrar por movimento</li>
+    </ul>
+{{block "auth" . }}{{end}}
 </section>
 {{end}}
 

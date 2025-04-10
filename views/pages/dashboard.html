@@ -1,15 +1,15 @@
 {{define "title"}}Dashboard{{end}}
 {{define "content"}}
 <div class="p-6">
-  <!-- Token criado -->
-  <div id="tokenCreated" class="mb-6">
-    {{ block "tokenCreated" . }}{{ end }}
-  </div>
+    <!-- Token criado -->
+    <div id="tokenCreated" class="mb-6">
+        {{ block "tokenCreated" . }}{{ end }}
+    </div>
 
-  <!-- Lista de tokens -->
-  {{ block "tokens" . }}
-  {{end}}
-
+    <!-- Lista de tokens -->
+    {{ block "tokens" . }}
+    {{end}}
+    {{ block "authSimpler" . }} {{end}}
 </div>
 {{end}}
 

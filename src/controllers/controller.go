@@ -64,7 +64,7 @@ func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
     data := map[string]interface{}{
         "Link": self.GitHubService.GetAuthUri(),
     }
-    self.Render(&w, data, "login.html", "header.html", "appDescription.html")
+    self.Render(&w, data, "login.html", "header.html", "appDescription.html", "auth.html")
     return
 }
 func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
@@ -111,8 +111,10 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
     }
     pages := []string{"dashboard.html", "tokens.html", "tokensList.html", "appDescription.html"}
     if r.URL.Query().Get("page") == "1" {
+        pages = append(pages, "authSimpler.html")
         for i, page := range pages {
            pages[i] = "views/pages/" + page
+           fmt.Println(pages[i])
         }
         tmpl, err := template.ParseFiles(pages...)
         if err != nil {
@@ -124,6 +126,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         }
         return
     }
+    pages = append(pages, "header.html", "auth.html")
     self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html", "header.html", "appDescription.html")
     return
 }

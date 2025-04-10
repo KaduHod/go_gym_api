@@ -1,0 +1,29 @@
+{{define "authSimpler"}}
+<h2 class="text-2xl mt-10 mb-2 font-semibold text-gray-800 flex items-center space-x-2">
+    🔐 <span>Autenticação</span>
+</h2>
+
+<p class="text-gray-700 mb-2 leading-relaxed">
+Para utilizar os endpoints da <strong>Musculo Eskeletal API</strong>, é necessário estar autenticado com um token de acesso.
+Siga os passos abaixo para gerar e usar seu token:
+</p>
+
+<ol class="list-decimal list-inside space-y-2 text-gray-700">
+    <li>
+        Aqui dashboard, clique no botão <span class="inline-flex items-center text-sm px-2 py-1 rounded ml-1">📋 Copiar token</span>.
+    </li>
+    <li class="text-red-600">
+        ⚠️ O token será exibido apenas uma vez. Copie e salve com segurança.
+    </li>
+    <li>
+        Utilize seu token nas requisições como no exemplo abaixo:
+    </li>
+</ol>
+
+<pre class="bg-gray-100 text-sm p-4 rounded border overflow-x-auto"><code class="text-gray-800">curl --location 'https://gymapi.kadu.tec.br/api/v1/muscles/groups' \
+--header 'Authorization: Bearer {SEU TOKEN!!}'</code></pre>
+
+<p class="text-gray-600 text-sm mt-2">
+Substitua o valor do token pelo que foi gerado para a sua conta.
+</p>
+{{end}}
