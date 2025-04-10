@@ -15,8 +15,8 @@ type UserSessionData struct {
     CsrfToken CsrfTokenInfo `json:"csrf_token"`
 }
 type UserAPIToken struct {
-	Id        uint64     `json:"id"`
-	UserId    uint64     `json:"user_id"`
+	Id        int64     `json:"id"`
+	UserId    int64     `json:"user_id"`
 	TokenName string     `json:"token_name"`
 	TokenHash string     `json:"-"` // Nunca deve ser exposto
 	CreatedAt time.Time  `json:"created_at"`

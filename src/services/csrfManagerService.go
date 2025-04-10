@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
+	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -46,6 +47,8 @@ func (m *CsrfService) generateToken() (string, error) {
 	token := base64.URLEncoding.EncodeToString(hash[:])
 	return token, nil
 }
+
+type Middleware func(http.Handler) http.Handler
 
 func (m *CsrfService) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -111,7 +114,7 @@ func (m *CsrfService) validateToken(r *http.Request, token string) bool {
 	if time.Now().After(session.CsrfToken.Expiration) {
 		return false
 	}
-
+    fmt.Println(session, token)
 	// Comparar tokens
 	return session.CsrfToken.Token == token
 }

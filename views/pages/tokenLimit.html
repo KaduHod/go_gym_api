@@ -1,0 +1,13 @@
+{{block "tokenLimit" .}}
+<div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded mb-6" role="alert">
+  <div class="flex items-center gap-2">
+    <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M8.257 3.099c.764-1.36 2.722-1.36 3.486 0l6.518 11.616c.75 1.336-.213 2.99-1.743 2.99H3.482c-1.53 0-2.492-1.654-1.743-2.99L8.257 3.1zM11 14a1 1 0 10-2 0 1 1 0 002 0zm-1-2a1 1 0 01-1-1V9a1 1 0 012 0v2a1 1 0 01-1 1z" clip-rule="evenodd"/>
+    </svg>
+    <p class="text-sm font-medium">
+      Você atingiu o limite máximo de tokens. Para criar um novo, é necessário excluir um existente.
+    </p>
+  </div>
+</div>
+{{end}}
+

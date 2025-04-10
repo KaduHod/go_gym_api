@@ -1,8 +1,12 @@
 {{define "title"}}Dashboard{{end}}
-{{define "content"}}
-<h1>Dashboard</h1>
 
-<form action="/token/create">
-    <input type="hidden" name="csrf_token" value="{{ .Csrf }}">
-</form>
+{{define "content"}}
+<div class="p-6">
+  <div id="tokenCreated" class="mb-6">
+    {{ block "tokenCreated" . }}{{ end }}
+  </div>
+
+  {{ block "tokens" . }}
+  {{end}}
+</div>
 {{end}}

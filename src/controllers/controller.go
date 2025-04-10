@@ -15,19 +15,31 @@ type Controller struct {
     TokenService *services.TokenService
     GitHubService *services.GitHubService
 }
-func (self Controller) Render(w *http.ResponseWriter, pageName string, data interface{}) {
-    tmplPage, err := template.ParseFiles("views/base.html", "views/pages/" + pageName)
+func (self Controller) Render(w *http.ResponseWriter, data interface{},  pageNames ...string) {
+    aux := []string{"views/base.html"}
+    for _, fileName := range pageNames {
+        aux = append(aux, "views/pages/" + fileName)
+    }
+    tmplPage, err := template.ParseFiles(aux...)
     if err != nil {
         self.InternalServerError(*w, nil, err)
         return
     }
     tmpl := template.Must(tmplPage, err)
+
     tmpl.Execute(*w, data)
 }
-func (self Controller) InternalServerError(w http.ResponseWriter, r *http.Request, err error) {
-    fmt.Println(err)
-    w.WriteHeader(500)
-    return
+func (self Controller) RenderPage(w http.ResponseWriter, data interface{}, pageName string) {
+    pageName = "views/pages/" + pageName
+    tmpl, err := template.ParseFiles(pageName)
+    if err != nil {
+        self.InternalServerError(w, nil, err)
+        return
+    }
+    w.Header().Set("Content-Type", "text/html")
+    if err := tmpl.Execute(w, data); err != nil {
+        self.InternalServerError(w, nil, err)
+    }
 }
 func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
     sessionExists, err := self.SessionService.SessionExists(r)
@@ -43,7 +55,7 @@ func (self Controller) Index(w http.ResponseWriter, r *http.Request) {
     data := map[string]interface{}{
         "Link": self.GitHubService.GetAuthUri(),
     }
-    self.Render(&w, "login.html", data)
+    self.Render(&w, data, "login.html")
     return
 }
 func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
@@ -53,7 +65,6 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         return
     }
     if !sessionExists {
-        fmt.Println("Passando aqui")
         self.Index(w, r)
         return
     }
@@ -89,8 +100,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         "Tokens": tokens,
         "Csrf": userSession.CsrfToken.Token,
     }
-    //fmt.Println(data)
-    self.Render(&w, "dashboard.html", data)
+    self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html")
     return
 }
 type MetaData struct {
@@ -133,4 +143,9 @@ func EmptyResponse(w http.ResponseWriter) {
 		Status: "success",
 		Data:   nil,
 	})
+}
+func (self Controller) InternalServerError(w http.ResponseWriter, r *http.Request, err error) {
+    fmt.Println(err)
+    w.WriteHeader(500)
+    return
 }

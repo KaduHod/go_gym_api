@@ -1,6 +1,8 @@
 package main
 
 import (
+    "github.com/go-chi/chi/v5"
+    "github.com/go-chi/chi/v5/middleware"
 	_ "KaduHod/muscles_api/docs"
 	"KaduHod/muscles_api/src/controllers"
 	"KaduHod/muscles_api/src/database"
@@ -97,24 +99,27 @@ func main() {
         UserRepository: &userRepository,
         SessionService: &sessionService,
     }
-    server := http.NewServeMux()
-    carlosServer := CustomServer{server: server}
-    // Rotas GET convertidas para usar o método Get do CustomServer
-    carlosServer.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
-    carlosServer.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
-    carlosServer.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
-    carlosServer.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
-    carlosServer.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
-    carlosServer.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
+    server := chi.NewRouter()
+    server.Use(middleware.GetHead)
+    server.Use(middleware.Logger)
+    server.Use(middleware.Recoverer)
+    server.Use(middleware.RealIP)
+    server.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
+    server.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
+    server.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
+    server.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
+    server.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
+    server.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
 
-    // Rotas HandleFunc convertidas para HandleFunc do CustomServer
-    carlosServer.Get("/docs/", httpSwagger.WrapHandler)
-    carlosServer.Get("/", controller.Index)
-    carlosServer.Get("/auth/github", loginController.Auth)
-
-    // Rotas com middleware convertidas
-    carlosServer.Post("/token", userController.CreateToken, csrfService.Middleware)
-    carlosServer.Get("/dashboard", controller.Dashboard, csrfService.Middleware)
-    handler := Use(server, Logger())
-    http.ListenAndServe(":3005", handler)
+    server.Get("/docs/", httpSwagger.WrapHandler)
+    server.Get("/", controller.Index)
+    server.Get("/auth/github", loginController.Auth)
+    server.Get("/tokens", userController.ListTokens)
+    server.Group(func(r chi.Router) {
+        r.Use(csrfService.Middleware)
+        server.Post("/token", userController.CreateToken)
+        server.Delete("/token/{id}", userController.DeleteToken)
+    })
+    server.Get("/dashboard", controller.Dashboard)
+    http.ListenAndServe(":3005", server)
 }

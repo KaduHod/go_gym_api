@@ -9,7 +9,7 @@ type TokenRepository struct {
 }
 
 func (self TokenRepository) GetTokens(user core.ApiUser) ([]core.UserAPIToken, error) {
-    query := `SELECT id, token_name, token_hash, created_at, deleted_at, user_id FROM user_api_tokens WHERE user_id = ?`
+    query := `SELECT id, token_name, token_hash, created_at, deleted_at, user_id FROM user_api_tokens WHERE user_id = ? AND deleted_at IS NULL`
     rows, err := self.Db.Query(query, user.Id)
     var resources []core.UserAPIToken
     if err != nil {
@@ -28,11 +28,16 @@ func (self TokenRepository) GetTokens(user core.ApiUser) ([]core.UserAPIToken, e
     return resources, nil
 }
 func (self TokenRepository) SaveToken(token core.UserAPIToken) (int64, error) {
-    query := `INSERT INTO user_api_tokens (token_name, token_hash, created_at, deleted_at, user_id) VALUES (?, ?, ?, ?, ?)`
-    result, err := self.Db.Exec(query, token.TokenName, token.TokenHash, token.CreatedAt, token.DeletedAt, token.UserId)
+    query := `INSERT INTO user_api_tokens (token_name, token_hash, user_id) VALUES (?, ?, ?)`
+    result, err := self.Db.Exec(query, token.TokenName, token.TokenHash, token.UserId)
     if err != nil {
         return 0, err
     }
     id, err := result.LastInsertId()
     return id, err
+}
+func (self TokenRepository) DeleteToken(id int64) error {
+    query := `DELETE FROM user_api_tokens WHERE id = ?`
+    _, err := self.Db.Exec(query, id)
+    return err
 }

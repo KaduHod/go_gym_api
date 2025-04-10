@@ -19,6 +19,7 @@ func ConnetionMysql() *sql.DB {
         Net:  "tcp",
         Addr: fmt.Sprintf("%s:%s", host, port),
         DBName: dbname,
+        ParseTime: true,
     }
     db, err := sql.Open("mysql", config.FormatDSN())
     if err != nil {
