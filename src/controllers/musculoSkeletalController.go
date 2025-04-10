@@ -14,7 +14,6 @@ type MusculoSkeletalController struct {
     MuscleRepository *repository.MuscleRepository
     JointRepository *repository.JointRepository
     AmmRepository *repository.AmmRepository
-
 }
 // ListMuscleGroups godoc
 // @Summary List all muscle groups
@@ -30,7 +29,7 @@ type MusculoSkeletalController struct {
 func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MuscleRepository.GetAll()
     if err == sql.ErrNoRows {
-        SuccessResponse(w, resources, 0)
+        self.SuccessResponse(w, r, resources, 0)
         return
     }
     if err != nil {
@@ -38,7 +37,7 @@ func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r 
         InternalServerErrorResponse(w, err)
         return
     }
-    SuccessResponse(w, resources, len(resources))
+    self.SuccessResponse(w, r, resources, len(resources))
     return
 }
 // ListMusclePortions godoc
@@ -55,14 +54,14 @@ func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r 
 func (self MusculoSkeletalController) ListMusclePortions(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MuscleRepository.GetAllPortions()
     if err == sql.ErrNoRows {
-        SuccessResponse(w, resources, 0)
+        self.SuccessResponse(w, r, resources, 0)
         return
     }
     if err != nil {
         InternalServerErrorResponse(w, err)
         return
     }
-    SuccessResponse(w, resources, len(resources))
+    self.SuccessResponse(w, r, resources, len(resources))
     return
 }
 // ListMuscles godoc
@@ -79,7 +78,7 @@ func (self MusculoSkeletalController) ListMusclePortions(w http.ResponseWriter, 
 func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MuscleRepository.GetWithPortions()
     if err == sql.ErrNoRows {
-        SuccessResponse(w, resources, 0)
+        self.SuccessResponse(w, r, resources, 0)
         return
     }
     if err != nil {
@@ -87,7 +86,7 @@ func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http
         InternalServerErrorResponse(w, err)
         return
     }
-    SuccessResponse(w, *resources, len(*resources))
+    self.SuccessResponse(w, r, resources, len(*resources))
     return
 }
 // ListJoints godoc
@@ -104,7 +103,7 @@ func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http
 func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.Request) {
     resources, err := self.JointRepository.GetAll()
     if err == sql.ErrNoRows {
-        SuccessResponse(w, resources, 0)
+        self.SuccessResponse(w, r, resources, 0)
         return
     }
     if err != nil {
@@ -112,7 +111,7 @@ func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.
         InternalServerErrorResponse(w, err)
         return
     }
-    SuccessResponse(w, resources, len(resources))
+    self.SuccessResponse(w, r, resources, len(resources))
 }
 // ListMoviments godoc
 // @Summary List all movements
@@ -128,7 +127,7 @@ func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.
 func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *http.Request) {
     resources, err := self.MovementRepository.GetAll()
     if err == sql.ErrNoRows {
-        SuccessResponse(w, resources, 0)
+        self.SuccessResponse(w, r, resources, 0)
         return
     }
     if err != nil {
@@ -136,7 +135,7 @@ func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *ht
         InternalServerErrorResponse(w, err)
         return
     }
-    SuccessResponse(w, resources, len(resources))
+    self.SuccessResponse(w, r, resources, len(resources))
 }
 // ListAmm godoc
 // @Summary List all musculoSkeletalSystem
@@ -162,7 +161,7 @@ func (self MusculoSkeletalController) ListAmm(w http.ResponseWriter, r *http.Req
     }
     resources, err := self.AmmRepository.GetAll(filters)
     if err == sql.ErrNoRows {
-        SuccessResponse(w, resources, 0)
+        self.SuccessResponse(w, r, resources, 0)
         return
     }
     if err != nil {
@@ -170,5 +169,5 @@ func (self MusculoSkeletalController) ListAmm(w http.ResponseWriter, r *http.Req
         InternalServerErrorResponse(w, err)
         return
     }
-    SuccessResponse(w, resources, len(resources))
+    self.SuccessResponse(w, r, resources, len(resources))
 }

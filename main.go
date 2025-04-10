@@ -2,6 +2,7 @@ package main
 
 import (
 	"KaduHod/muscles_api/src/auth"
+	"KaduHod/muscles_api/src/cache"
 	"KaduHod/muscles_api/src/controllers"
 	"KaduHod/muscles_api/src/database"
 	repository "KaduHod/muscles_api/src/repositorys"
@@ -10,10 +11,11 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-    "github.com/go-chi/cors"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 
-    _ "KaduHod/muscles_api/docs"
+	_ "KaduHod/muscles_api/docs"
+
 	httpSwagger "github.com/swaggo/http-swagger/v2"
 
 	"github.com/joho/godotenv"
@@ -82,12 +84,16 @@ func main() {
         TokenRepository: &tokenRepository,
         TokenService: &tokenService,
     }
+    cacheService := cache.CacheService{
+        Redis: redis,
+    }
     controller := controllers.Controller{
         UserRepository: &userRepository,
         SessionService: &sessionService,
         GitHubService: &githubService,
         TokenService: &tokenService,
         TokenRepository: &tokenRepository,
+        CacheService: &cacheService,
     }
     musculoSkeletalController := controllers.MusculoSkeletalController{
         Controller: controller,
@@ -114,14 +120,12 @@ func main() {
     server.Use(middleware.Logger)
     server.Use(middleware.Recoverer)
     server.Use(middleware.RealIP)
-
-
+    server.Use(cacheService.Middleware)
+    server.Get("/auth/github", loginController.Auth)
     server.Get("/docs/*", httpSwagger.Handler(
         httpSwagger.URL("http://localhost:3005/docs/doc.json"), //The url pointing to API definition
     ))
     server.Get("/", controller.Index)
-    server.Get("/auth/github", loginController.Auth)
-    server.Get("/tokens", userController.ListTokens)
     server.Group(func(r chi.Router) {
         r.Use(csrfService.Middleware)
         r.Use(cors.Handler(cors.Options{
@@ -134,8 +138,9 @@ func main() {
             AllowCredentials: false,
             MaxAge:           300, // Maximum value not ignored by any of major browsers
         }))
-        server.Post("/token", userController.CreateToken)
-        server.Delete("/token/{id}", userController.DeleteToken)
+        r.Get("/tokens", userController.ListTokens)
+        r.Post("/token", userController.CreateToken)
+        r.Delete("/token/{id}", userController.DeleteToken)
     })
     server.Get("/info", controller.Info)
     server.Get("/dashboard", controller.Dashboard)

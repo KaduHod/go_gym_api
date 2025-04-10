@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"KaduHod/muscles_api/src/cache"
 	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
 	"encoding/json"
@@ -14,6 +15,7 @@ type Controller struct {
     SessionService *services.SessionService
     TokenService *services.TokenService
     GitHubService *services.GitHubService
+    CacheService *cache.CacheService
 }
 func (self Controller) Render(w *http.ResponseWriter, data interface{},  pageNames ...string) {
     aux := []string{"views/base.html"}
@@ -130,6 +132,31 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
     self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html", "header.html", "appDescription.html")
     return
 }
+// SuccessResponse retorna uma resposta de sucesso com dados e metadados
+func (c *Controller) SuccessResponse(w http.ResponseWriter, r *http.Request, data interface{}, totalItems int) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    response := Response[interface{}]{
+        Status: "success",
+        Data:   data,
+        MetaData: MetaData{
+            TotalItens: totalItems,
+        },
+    }
+    c.CacheService.SetCacheFromRoute(r, response)
+    json.NewEncoder(w).Encode(response)
+}
+
+// EmptyResponse retorna uma resposta vazia com status 204 No Content
+func (c *Controller) EmptyResponse(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusNoContent)
+    response := Response[interface{}]{
+        Status: "success",
+        Data:   nil,
+    }
+    json.NewEncoder(w).Encode(response)
+}
 type MetaData struct {
 	TotalItens int `json:"total_itens"`
 }
@@ -150,13 +177,14 @@ type ResponseUnauthorized struct {
 func SuccessResponse[T any](w http.ResponseWriter, data T, totalItems int) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(Response[T]{
+    response := Response[T]{
 		Status: "success",
 		Data:   data,
 		MetaData: MetaData{
 			TotalItens: totalItems,
 		},
-	})
+	}
+	json.NewEncoder(w).Encode(response)
 }
 func InternalServerErrorResponse(w http.ResponseWriter, err error) {
 	w.Header().Set("Content-Type", "application/json")
@@ -164,14 +192,6 @@ func InternalServerErrorResponse(w http.ResponseWriter, err error) {
 	json.NewEncoder(w).Encode(Response[string]{
 		Status: "fail",
 		Data:   err.Error(),
-	})
-}
-func EmptyResponse(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNoContent)
-	json.NewEncoder(w).Encode(Response[interface{}]{
-		Status: "success",
-		Data:   nil,
 	})
 }
 func (self Controller) InternalServerError(w http.ResponseWriter, r *http.Request, err error) {
