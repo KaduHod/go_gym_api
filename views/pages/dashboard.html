@@ -1,16 +1,6 @@
 {{define "title"}}Dashboard{{end}}
 {{define "content"}}
 <div class="p-6">
-
-  <!-- Link para a documentação -->
-  <div class="mb-4 flex justify-end">
-    <a href="/docs/index.html#/"
-       target="_blank"
-       class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
-      📚 Documentação da API
-    </a>
-  </div>
-
   <!-- Token criado -->
   <div id="tokenCreated" class="mb-6">
     {{ block "tokenCreated" . }}{{ end }}
