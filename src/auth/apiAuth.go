@@ -40,7 +40,6 @@ func (self *ApiAuthService) Middleware(next http.Handler) http.Handler {
         }
         var valid bool
         for _, token := range tokens {
-            fmt.Println(token)
             valid = self.TokenService.ValidateToken(tokenBearer, token.TokenHash)
             if valid {
                 break

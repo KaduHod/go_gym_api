@@ -36,9 +36,9 @@ func (s AmmRepository) GetAll(filters map[string]string) ([]core.MuscleMovementI
 		queryParts = append(queryParts, "a.name = ?")
 		args = append(args, strings.TrimSpace(joint))
 	}
-	if moviment := filters["moviment"]; moviment != "" {
+	if movement := filters["movement"]; movement != "" {
 		queryParts = append(queryParts, "m.name = ?")
-		args = append(args, strings.TrimSpace(moviment))
+		args = append(args, strings.TrimSpace(movement))
 	}
 
 	if len(queryParts) > 0 {

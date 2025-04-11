@@ -157,7 +157,7 @@ func (self MusculoSkeletalController) ListAmm(w http.ResponseWriter, r *http.Req
         "muscle_group": r.URL.Query().Get("muscle_group"),
         "muscle_portion": r.URL.Query().Get("muscle_portion"),
         "joint": r.URL.Query().Get("joint"),
-        "moviment": r.URL.Query().Get("moviment"),
+        "movement": r.URL.Query().Get("movement"),
     }
     resources, err := self.AmmRepository.GetAll(filters)
     if err == sql.ErrNoRows {

@@ -75,7 +75,7 @@ func (self *CacheService) PrepareKeyFromRoute(r *http.Request) (string, error) {
     var key string
     key = r.URL.Path
     key = strings.ReplaceAll(key, "/", "_")
-    var args map[string][]string
+    args := make(map[string][]string)
     keysSlice := []string{}
     if r.Method == http.MethodPost {
         if err := r.ParseForm(); err != nil {
