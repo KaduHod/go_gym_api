@@ -26,6 +26,7 @@ Siga os passos abaixo para gerar e usar seu token:
     </li>
 </ol>
 <pre class="bg-gray-100 text-sm p-4 rounded border overflow-x-auto"><code class="text-gray-800">curl --location 'https://gymapi.kadu.tec.br/api/v1/muscles/groups' \
+--header 'If-None-Match: "aa450bb55d5a1318432d6b50817fa6fe"' \
 --header 'Authorization: Bearer {SEU TOKEN!!}'</code></pre>
 <p class="text-gray-600 text-sm mt-2">
 Substitua o valor do token pelo que foi gerado para a sua conta.
