@@ -9,6 +9,7 @@ import (
 	"KaduHod/muscles_api/src/services"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -63,7 +64,16 @@ func Logger() Middleware {
 // @name Authorization
 // @description Type "Bearer" followed by a space and your Token.
 func main() {
-    if err := godotenv.Load(".env"); err != nil {
+	logFile, err := os.OpenFile("/app/logs/server.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Erro ao abrir arquivo de log: %v", err)
+	}
+	log.SetOutput(logFile)
+    envFile := ".env"
+    if len(os.Args) > 1 && os.Args[1] == "prod" {
+        envFile = ".env.prod"
+    }
+    if err := godotenv.Load(envFile); err != nil {
         log.Fatal(err)
     }
     db := database.ConnetionMysql()
@@ -116,13 +126,14 @@ func main() {
         SessionService: &sessionService,
     }
     server := chi.NewRouter()
+    server.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: log.New(logFile, "", log.LstdFlags)}))
     server.Use(middleware.GetHead)
     server.Use(middleware.Logger)
     server.Use(middleware.Recoverer)
     server.Use(middleware.RealIP)
     server.Get("/auth/github", loginController.Auth)
     server.Get("/docs/*", httpSwagger.Handler(
-        httpSwagger.URL("http://localhost:3005/docs/doc.json"), //The url pointing to API definition
+        httpSwagger.URL("/docs/doc.json"), //The url pointing to API definition
     ))
     server.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
     server.Get("/", controller.Index)

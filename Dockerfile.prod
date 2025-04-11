@@ -1,4 +1,3 @@
-
 FROM golang:1.23 AS builder
 WORKDIR /app
 
@@ -43,5 +42,5 @@ COPY package.json /app/package.json
 EXPOSE 3005
 
 # Executa o binário Go
-CMD ["/app/go_gym_api"]
+CMD ["/app/go_gym_api", "prod"]
 

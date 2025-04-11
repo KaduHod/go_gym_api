@@ -1,0 +1,21 @@
+services:
+  go_gym_api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3005"
+    env_file:
+      - .env
+    volumes:
+      - ./views:/app/views
+      - ./public:/app/public
+      - ./public/css/main.css:/app/public/css/main.css
+      - ./logs:/app/logs
+    networks:
+      - gym
+    restart: unless-stopped
+
+networks:
+  gym:
+    external: true
