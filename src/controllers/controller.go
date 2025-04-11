@@ -4,8 +4,7 @@ import (
 	"KaduHod/muscles_api/src/cache"
 	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
-	"crypto/md5"
-	"encoding/hex"
+	"KaduHod/muscles_api/src/utils"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -19,10 +18,7 @@ type Controller struct {
     GitHubService *services.GitHubService
     CacheService *cache.CacheService
 }
-func (self Controller) generateEtag(content []byte) string {
-    hash := md5.Sum(content)
-    return "\"" + hex.EncodeToString(hash[:]) + "\""
-}
+
 func (self Controller) Render(w *http.ResponseWriter, data interface{},  pageNames ...string) {
     aux := []string{"views/base.html"}
     for _, fileName := range pageNames {
@@ -161,12 +157,12 @@ func (c *Controller) SuccessResponse(w http.ResponseWriter, r *http.Request, dat
         c.InternalServerError(w, r, err)
         return
     }
-    etag := c.generateEtag(json)
-    w.Header().Set("Etag", etag)
+    etag := utils.GenerateEtag(json)
     if r.Header.Get("If-None-Match") == etag {
         w.WriteHeader(http.StatusNotModified)
         return
     }
+    w.Header().Set("ETag", etag)
     w.WriteHeader(http.StatusOK)
     w.Write(json)
 }

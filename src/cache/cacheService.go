@@ -2,6 +2,7 @@ package cache
 
 import (
 	"KaduHod/muscles_api/src/database"
+	"KaduHod/muscles_api/src/utils"
 	"context"
 	"encoding/json"
 	"errors"
@@ -26,6 +27,12 @@ func (self *CacheService) Middleware(next http.Handler) http.Handler {
         }
         if cache != nil && err == nil {
             w.Header().Set("Content-Type", "application/json")
+            etag := utils.GenerateEtag(cache)
+            if r.Header.Get("If-None-Match") == etag {
+                w.WriteHeader(http.StatusNotModified)
+                return
+            }
+            w.Header().Set("ETag", etag)
             w.WriteHeader(http.StatusOK)
             w.Write(cache)
             return
