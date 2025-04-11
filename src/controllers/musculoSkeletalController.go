@@ -138,7 +138,7 @@ func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *ht
     self.SuccessResponse(w, r, resources, len(resources))
 }
 // ListAmm godoc
-// @Summary List all musculoSkeletalSystem
+// @Summary Map muscles, joints e movements.
 // @Description Get a list of all muscle-movement-joint relationships with optional filtering
 // @Tags Musculoskeletal
 // @Accept  json

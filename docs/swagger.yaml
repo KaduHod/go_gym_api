@@ -280,7 +280,7 @@ paths:
               type: object
       security:
       - BearerAuth: []
-      summary: List all musculoSkeletalSystem
+      summary: Map muscles, joints e movements.
       tags:
       - Musculoskeletal
   /muscles/portions:

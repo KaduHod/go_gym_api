@@ -312,7 +312,7 @@ const docTemplate = `{
                 "tags": [
                     "Musculoskeletal"
                 ],
-                "summary": "List all musculoSkeletalSystem",
+                "summary": "Map muscles, joints e movements.",
                 "parameters": [
                     {
                         "type": "string",
