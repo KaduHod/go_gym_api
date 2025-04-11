@@ -1,17 +1,17 @@
 {{define "appDescription"}}
-<section class="max-w-5xl mx-auto px-6 py-10 text-gray-800">
-    <h1 class="text-4xl font-bold mb-4">🧬 Musculo Eskeletal API</h1>
+<section class="max-w-5xl mx-auto px-6 py-10 text-gray-800 animate-fade-in">
+    <h1 class="text-4xl font-bold mb-4 transition-transform duration-500 hover:scale-105">🧬 Musculo Eskeletal API</h1>
 
-    <h2 class="text-2xl font-semibold mt-8 mb-2">📖 Descrição</h2>
-    <p class="text-gray-700 mb-6">
-    A Musculo Eskeletal API oferece acesso a informações estruturadas sobre o sistema musculoesquelético humano.
-    Esta API é projetada para aplicações que requerem dados sobre músculos, articulações, movimentos e relações entre eles,
-    como sistemas de anatomia, biomecânica ou plataformas de educação médica.
+    <h2 class="text-2xl font-semibold mt-8 mb-2 transition-colors duration-300 hover:text-blue-700">📖 Descrição</h2>
+    <p class="text-gray-700 mb-6 transition-opacity duration-500">
+        A Musculo Eskeletal API oferece acesso a informações estruturadas sobre o sistema musculoesquelético humano.
+        Esta API é projetada para aplicações que requerem dados sobre músculos, articulações, movimentos e relações entre eles,
+        como sistemas de anatomia, biomecânica ou plataformas de educação médica.
     </p>
 
-    <h2 class="text-2xl font-semibold mt-10 mb-2">🚀 Principais recursos</h2>
+    <h2 class="text-2xl font-semibold mt-10 mb-2 transition-colors duration-300 hover:text-blue-700">🚀 Principais recursos</h2>
     <p class="text-gray-700 mb-4">Através dos endpoints disponíveis, você pode:</p>
-    <ul class="list-disc list-inside space-y-2 pl-4 text-gray-700">
+    <ul class="list-disc list-inside space-y-2 pl-4 text-gray-700 transition-all duration-500">
         <li>🔹 Listar todas as articulações (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/joints</code>)</li>
         <li>🔹 Consultar os movimentos possíveis (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/movements</code>)</li>
         <li>🔹 Obter uma hierarquia de grupos musculares e suas porções (<code class="bg-gray-100 px-2 py-0.5 rounded text-sm">/muscles</code>)</li>
@@ -31,7 +31,23 @@
         <h3 class="text-lg font-semibold text-gray-800 mb-1">Status de resposta padrão:</h3>
         <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
             <li><code class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-sm">200 OK</code>: Requisição bem-sucedida</li>
+            <li><code class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-sm">304 Not Modified</code>: ETag igual, sem necessidade de retornar conteúdo</li>
+            <li><code class="bg-red-100 text-red-800 px-2 py-0.5 rounded text-sm">404 Not Found</code>: Recurso não encontrado</li>
             <li><code class="bg-red-100 text-red-800 px-2 py-0.5 rounded text-sm">500 Internal Server Error</code>: Erro inesperado no servidor</li>
+        </ul>
+    </div>
+
+    <div class="mt-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-1">📦 Cache e ETag</h3>
+        <ul class="list-disc list-inside text-gray-700 pl-4 space-y-1">
+            <li>
+                As respostas dos endpoints <strong>GET</strong> são cacheáveis por até <strong>1 semana</strong>.
+            </li>
+            <li>
+                A API suporta o uso do cabeçalho <code class="bg-gray-100 px-2 py-0.5 rounded text-sm">If-None-Match</code> com base no valor de <code class="text-sm">ETag</code>.
+                Caso o ETag enviado seja igual ao conteúdo atual, o servidor responderá com
+                <code class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded text-sm">304 Not Modified</code> e nenhum conteúdo no body.
+            </li>
         </ul>
     </div>
 
@@ -55,7 +71,8 @@
         <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">joint</code>: Filtrar por articulação</li>
         <li><code class="bg-gray-100 px-2 py-0.5 rounded text-sm">movement</code>: Filtrar por movimento</li>
     </ul>
-{{block "auth" . }}{{end}}
+
+    {{block "auth" .}}{{end}}
 </section>
 {{end}}
 

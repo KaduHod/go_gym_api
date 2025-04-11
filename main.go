@@ -61,7 +61,7 @@ func Logger() Middleware {
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
-// @description Type "Bearer" followed by a space tour Token.
+// @description Type "Bearer" followed by a space and your Token.
 func main() {
     if err := godotenv.Load(".env"); err != nil {
         log.Fatal(err)
@@ -124,6 +124,7 @@ func main() {
     server.Get("/docs/*", httpSwagger.Handler(
         httpSwagger.URL("http://localhost:3005/docs/doc.json"), //The url pointing to API definition
     ))
+    server.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("./public"))))
     server.Get("/", controller.Index)
     server.Group(func(r chi.Router) {
         r.Use(csrfService.Middleware)

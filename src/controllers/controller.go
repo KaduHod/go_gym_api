@@ -47,11 +47,11 @@ func (self Controller) RenderPage(w http.ResponseWriter, data interface{}, pageN
 }
 func (self Controller) setHeaderForHtmlResponse(w http.ResponseWriter) {
     w.Header().Set("Content-Type", "text/html")
-    w.Header().Set("Cache-Control", "no-cache")
-    w.Header().Set("Cache-Control", "no-store")
+    //w.Header().Set("Cache-Control", "no-cache")
+    //w.Header().Set("Cache-Control", "no-store")
 }
 func (self Controller) Info(w http.ResponseWriter, r *http.Request) {
-    tmpl, err := template.ParseFiles("views/pages/appDescription.html")
+    tmpl, err := template.ParseFiles("views/pages/appDescription.html", "views/pages/auth.html")
     if err != nil {
         self.InternalServerError(w, r, err)
         return
@@ -137,8 +137,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
         }
         return
     }
-    pages = append(pages, "header.html", "auth.html")
-    self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html", "header.html", "appDescription.html")
+    self.Render(&w, data, "dashboard.html", "tokens.html", "tokensList.html", "header.html", "appDescription.html", "authSimpler.html")
     return
 }
 // SuccessResponse retorna uma resposta de sucesso com dados e metadados
