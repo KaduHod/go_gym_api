@@ -4,6 +4,8 @@ import (
 	"KaduHod/muscles_api/src/cache"
 	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -17,6 +19,10 @@ type Controller struct {
     GitHubService *services.GitHubService
     CacheService *cache.CacheService
 }
+func (self Controller) generateEtag(content []byte) string {
+    hash := md5.Sum(content)
+    return "\"" + hex.EncodeToString(hash[:]) + "\""
+}
 func (self Controller) Render(w *http.ResponseWriter, data interface{},  pageNames ...string) {
     aux := []string{"views/base.html"}
     for _, fileName := range pageNames {
@@ -28,7 +34,7 @@ func (self Controller) Render(w *http.ResponseWriter, data interface{},  pageNam
         return
     }
     tmpl := template.Must(tmplPage, err)
-
+    self.setHeaderForHtmlResponse(*w)
     tmpl.Execute(*w, data)
 }
 func (self Controller) RenderPage(w http.ResponseWriter, data interface{}, pageName string) {
@@ -38,10 +44,15 @@ func (self Controller) RenderPage(w http.ResponseWriter, data interface{}, pageN
         self.InternalServerError(w, nil, err)
         return
     }
-    w.Header().Set("Content-Type", "text/html")
+    self.setHeaderForHtmlResponse(w)
     if err := tmpl.Execute(w, data); err != nil {
         self.InternalServerError(w, nil, err)
     }
+}
+func (self Controller) setHeaderForHtmlResponse(w http.ResponseWriter) {
+    w.Header().Set("Content-Type", "text/html")
+    w.Header().Set("Cache-Control", "no-cache")
+    w.Header().Set("Cache-Control", "no-store")
 }
 func (self Controller) Info(w http.ResponseWriter, r *http.Request) {
     tmpl, err := template.ParseFiles("views/pages/appDescription.html")
@@ -49,6 +60,7 @@ func (self Controller) Info(w http.ResponseWriter, r *http.Request) {
         self.InternalServerError(w, r, err)
         return
     }
+    self.setHeaderForHtmlResponse(w)
     tmpl.ExecuteTemplate(w, "appDescription", nil)
     return
 }
@@ -123,6 +135,7 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
             self.InternalServerError(w, r, err)
             return
         }
+        self.setHeaderForHtmlResponse(w)
         if err := tmpl.ExecuteTemplate(w, "content", data); err != nil {
             self.InternalServerError(w, r, err)
         }
@@ -135,7 +148,6 @@ func (self Controller) Dashboard(w http.ResponseWriter, r *http.Request) {
 // SuccessResponse retorna uma resposta de sucesso com dados e metadados
 func (c *Controller) SuccessResponse(w http.ResponseWriter, r *http.Request, data interface{}, totalItems int) {
     w.Header().Set("Content-Type", "application/json")
-    w.WriteHeader(http.StatusOK)
     response := Response[interface{}]{
         Status: "success",
         Data:   data,
@@ -144,7 +156,19 @@ func (c *Controller) SuccessResponse(w http.ResponseWriter, r *http.Request, dat
         },
     }
     c.CacheService.SetCacheFromRoute(r, response)
-    json.NewEncoder(w).Encode(response)
+    json, err := json.Marshal(response)
+    if err != nil {
+        c.InternalServerError(w, r, err)
+        return
+    }
+    etag := c.generateEtag(json)
+    w.Header().Set("Etag", etag)
+    if r.Header.Get("If-None-Match") == etag {
+        w.WriteHeader(http.StatusNotModified)
+        return
+    }
+    w.WriteHeader(http.StatusOK)
+    w.Write(json)
 }
 
 // EmptyResponse retorna uma resposta vazia com status 204 No Content
