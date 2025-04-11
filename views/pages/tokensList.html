@@ -2,34 +2,29 @@
 <ul class="flex flex-col divide-y divide-gray-200 border rounded-md overflow-hidden shadow-sm">
   {{$csrf := .Csrf}}
   {{range .Tokens}}
-  <li class="flex items-center justify-between px-4 py-3 bg-white hover:bg-gray-50 transition">
-
-    <div class="flex items-center space-x-3">
+  <li class="flex flex-col sm:flex-row sm:items-center justify-between px-3 sm:px-4 py-3 bg-white hover:bg-gray-50 transition">
+    <div class="flex items-center space-x-3 mb-2 sm:mb-0">
       <!-- Emoji de chave -->
-      <span class="text-xl">🔑</span>
-
-      <div>
-        <p class="font-medium text-gray-800">{{.TokenName}}</p>
+      <span class="text-lg sm:text-xl">🔑</span>
+      <div class="overflow-hidden">
+        <p class="font-medium text-gray-800 text-sm sm:text-base truncate">{{.TokenName}}</p>
         <p class="text-xs text-gray-500">Criado em {{ .CreatedAt.Format "02/01/2006 15:04" }}</p>
       </div>
     </div>
-
     <!-- Botão de deletar com emoji -->
     <button
       hx-delete="/token/{{.Id}}"
       hx-target="closest li"
       hx-headers='{"X-CSRF-Token": "{{$csrf}}"}'
       hx-swap="outerHTML remove"
-      class="text-red-600 hover:text-red-800 hover:bg-red-50 hover:cursor-pointer p-2 rounded-full transition text-lg"
+      class="text-red-600 hover:text-red-800 hover:bg-red-50 hover:cursor-pointer p-2 rounded-full transition text-lg self-end sm:self-auto"
       title="Excluir token"
     >
       🗑️
     </button>
-
   </li>
   {{else}}
-  <li class="px-4 py-3 text-gray-500 italic bg-gray-50">Nenhum token criado ainda.</li>
+  <li class="px-3 sm:px-4 py-3 text-gray-500 italic bg-gray-50 text-sm sm:text-base">Nenhum token criado ainda.</li>
   {{end}}
 </ul>
 {{end}}
-
