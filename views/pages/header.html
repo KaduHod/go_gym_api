@@ -1,56 +1,50 @@
 {{define "header"}}
-<header class="bg-white border-b shadow-sm px-6 py-4 flex items-center justify-between">
-
-  <!-- Área do usuário -->
-  <div class="flex items-center space-x-4">
-    {{if .User}}
-      <!-- Avatar GitHub -->
-      <img src="{{.User.AvatarURL}}" alt="Avatar GitHub" class="w-10 h-10 rounded-full border" />
-
-      <!-- Nome de login -->
-      <span class="text-gray-800 font-medium text-sm">@{{.User.Login}}</span>
+<header class="bg-white border-b shadow-sm px-3 sm:px-6 py-3 sm:py-4">
+  <div class="flex flex-col sm:flex-row items-center justify-between w-full gap-4">
+    <!-- Área do usuário -->
+    <div class="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto justify-center sm:justify-start">
+      {{if .User}}
+        <!-- Avatar GitHub -->
+        <img src="{{.User.AvatarURL}}" alt="Avatar GitHub" class="w-8 h-8 sm:w-10 sm:h-10 rounded-full border" />
+        <!-- Nome de login -->
+        <span class="text-gray-800 font-medium text-xs sm:text-sm">@{{.User.Login}}</span>
       {{else}}
-
-      <div class="flex items-center justify-center space-x-4 px-4 py-3 rounded">
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 px-2 sm:px-4 py-2 sm:py-3 rounded w-full">
           <!-- Botão de login -->
-          <a href="{{.Link}}" class="flex items-center space-x-2 px-5 py-2.5 bg-gray-800 text-white font-medium rounded shadow hover:bg-gray-700 transition">
-              <span>🔐</span>
-              <span>Entrar com GitHub</span>
+          <a href="{{.Link}}" class="flex items-center justify-center space-x-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gray-800 text-white font-medium rounded shadow hover:bg-gray-700 transition text-sm w-full sm:w-auto">
+            <span>🔐</span>
+            <span>Entrar com GitHub</span>
           </a>
-
-          <!-- Instrução ao lado -->
-          <span class="text-sm text-gray-700 flex items-center space-x-1">
-              <span>👈</span>
-              <span>Para obter sua chave de API</span>
+          <!-- Instrução ao lado ou abaixo no mobile -->
+          <span class="text-xs sm:text-sm text-gray-700 flex items-center space-x-1 justify-center">
+            <span>👈</span>
+            <span>Para obter sua chave de API</span>
           </span>
-      </div>
+        </div>
+      {{end}}
+    </div>
 
-    {{end}}
+    <!-- Links de navegação -->
+    <nav class="flex flex-wrap justify-center sm:justify-end items-center gap-4 sm:gap-6 w-full sm:w-auto text-center pb-2 sm:pb-0">
+      <!-- Botão para ver descrição da API -->
+      <a hx-get="/info" hx-target="main"
+         class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-xs sm:text-sm transition">
+        🧬 Sobre a API
+      </a>
+      <!-- Link para a documentação -->
+      <a href="/docs/index.html#/"
+         target="_blank"
+         class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-xs sm:text-sm transition">
+        📚 Documentação
+      </a>
+      {{if .User}}
+      <!-- Link para o dashboard da API -->
+      <a hx-get="/dashboard?page=1" hx-target="main"
+         class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-xs sm:text-sm transition">
+        🧪 Dashboard
+      </a>
+      {{end}}
+    </nav>
   </div>
-
-  <div class="flex items-center space-x-6">
-    <!-- Botão para ver descrição da API -->
-    <a hx-get="/info" hx-target="main"
-       class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
-      🧬 Sobre a API
-    </a>
-
-    <!-- Link para a documentação -->
-    <a href="/docs/index.html#/"
-       target="_blank"
-       class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
-      📚 Documentação da API
-    </a>
-
-    {{if .User}}
-    <!-- Link para o dashboard da API -->
-    <a hx-get="/dashboard?page=1" hx-target="main"
-       class="inline-flex items-center text-blue-600 hover:text-blue-800 hover:cursor-pointer font-medium text-sm transition">
-      🧪 Dashboard da API
-    </a>
-    {{end}}
-  </div>
-
 </header>
 {{end}}
-

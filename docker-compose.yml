@@ -12,6 +12,9 @@ services:
       - ./public:/app/public
       - ./public/css/main.css:/app/public/css/main.css
       - ./logs:/app/logs
+      - ./src:/app/src
+      - ./main.go:/app/main.go
+      - ./docs:/app/docs
     networks:
       - gym
     restart: unless-stopped

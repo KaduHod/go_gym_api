@@ -631,12 +631,12 @@ video {
   display: none;
 }
 
-.h-10 {
-  height: 2.5rem;
-}
-
 .h-5 {
   height: 1.25rem;
+}
+
+.h-8 {
+  height: 2rem;
 }
 
 .h-fit {
@@ -644,12 +644,12 @@ video {
   height: fit-content;
 }
 
-.w-10 {
-  width: 2.5rem;
-}
-
 .w-5 {
   width: 1.25rem;
+}
+
+.w-8 {
+  width: 2rem;
 }
 
 .w-full {
@@ -676,6 +676,10 @@ video {
   flex-direction: column;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
 .items-start {
   align-items: flex-start;
 }
@@ -696,6 +700,10 @@ video {
   gap: 0.5rem;
 }
 
+.gap-4 {
+  gap: 1rem;
+}
+
 .space-x-1 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.25rem * var(--tw-space-x-reverse));
@@ -712,18 +720,6 @@ video {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.75rem * var(--tw-space-x-reverse));
   margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.space-x-4 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1rem * var(--tw-space-x-reverse));
-  margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.space-x-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(1.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-y-1 > :not([hidden]) ~ :not([hidden]) {
@@ -872,11 +868,6 @@ video {
   padding-right: 1rem;
 }
 
-.px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
-}
-
 .px-6 {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
@@ -902,28 +893,21 @@ video {
   padding-bottom: 0.5rem;
 }
 
-.py-2\.5 {
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
-}
-
 .py-3 {
   padding-top: 0.75rem;
   padding-bottom: 0.75rem;
 }
 
-.py-4 {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-
-.px-1 {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
+.pb-2 {
+  padding-bottom: 0.5rem;
 }
 
 .pl-4 {
   padding-left: 1rem;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .text-2xl {
@@ -1041,14 +1025,6 @@ video {
   color: rgb(133 77 14 / var(--tw-text-opacity, 1));
 }
 
-.opacity-0 {
-  opacity: 0;
-}
-
-.opacity-100 {
-  opacity: 1;
-}
-
 .shadow {
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -1093,48 +1069,12 @@ video {
   transition-duration: 150ms;
 }
 
-.delay-100 {
-  transition-delay: 100ms;
-}
-
-.delay-1000 {
-  transition-delay: 1000ms;
-}
-
-.delay-150 {
-  transition-delay: 150ms;
-}
-
-.delay-200 {
-  transition-delay: 200ms;
-}
-
-.delay-300 {
-  transition-delay: 300ms;
-}
-
-.delay-500 {
-  transition-delay: 500ms;
-}
-
-.delay-700 {
-  transition-delay: 700ms;
-}
-
-.delay-75 {
-  transition-delay: 75ms;
-}
-
 .duration-300 {
   transition-duration: 300ms;
 }
 
 .duration-500 {
   transition-duration: 500ms;
-}
-
-.duration-700 {
-  transition-duration: 700ms;
 }
 
 .hover\:scale-105:hover {
@@ -1206,6 +1146,87 @@ video {
 .focus\:ring-blue-500:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity, 1));
+}
+
+@media (min-width: 640px) {
+  .sm\:h-10 {
+    height: 2.5rem;
+  }
+
+  .sm\:w-10 {
+    width: 2.5rem;
+  }
+
+  .sm\:w-auto {
+    width: auto;
+  }
+
+  .sm\:flex-row {
+    flex-direction: row;
+  }
+
+  .sm\:justify-start {
+    justify-content: flex-start;
+  }
+
+  .sm\:justify-end {
+    justify-content: flex-end;
+  }
+
+  .sm\:gap-6 {
+    gap: 1.5rem;
+  }
+
+  .sm\:space-x-4 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(1rem * var(--tw-space-x-reverse));
+    margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+  }
+
+  .sm\:space-y-0 > :not([hidden]) ~ :not([hidden]) {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0px * var(--tw-space-y-reverse));
+  }
+
+  .sm\:px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .sm\:px-5 {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+
+  .sm\:px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .sm\:py-2\.5 {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .sm\:py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .sm\:py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .sm\:pb-0 {
+    padding-bottom: 0px;
+  }
+
+  .sm\:text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
 }
 
 @media (min-width: 768px) {
