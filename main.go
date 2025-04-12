@@ -7,6 +7,7 @@ import (
 	"KaduHod/muscles_api/src/database"
 	repository "KaduHod/muscles_api/src/repositorys"
 	"KaduHod/muscles_api/src/services"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -64,11 +65,12 @@ func Logger() Middleware {
 // @name Authorization
 // @description Type "Bearer" followed by a space and your Token.
 func main() {
+
+    fmt.Println("Preparando logs e ambiente")
 	logFile, err := os.OpenFile("/app/logs/server.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("Erro ao abrir arquivo de log: %v", err)
 	}
-	log.SetOutput(logFile)
     envFile := ".env"
     if len(os.Args) > 1 && os.Args[1] == "prod" {
         envFile = ".env.prod"
@@ -76,6 +78,7 @@ func main() {
     if err := godotenv.Load(envFile); err != nil {
         log.Fatal(err)
     }
+    fmt.Println("Iniciando configurações do servidor")
     db := database.ConnetionMysql()
     defer db.Close()
     redis := database.NewRedis()
@@ -90,6 +93,7 @@ func main() {
     sessionService := services.SessionService{Redis: redis}
     tokenService := services.NewTokenService(&userRepository, &tokenRepository)
     csrfService := services.NewCsrfService(&sessionService)
+    fmt.Println("Instanciado dependencias")
     authService := auth.ApiAuthService{
         TokenRepository: &tokenRepository,
         TokenService: &tokenService,
@@ -125,12 +129,15 @@ func main() {
         UserRepository: &userRepository,
         SessionService: &sessionService,
     }
+
+    fmt.Println("Criando controllers")
     server := chi.NewRouter()
     server.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: log.New(logFile, "", log.LstdFlags)}))
     server.Use(middleware.GetHead)
     server.Use(middleware.Logger)
     server.Use(middleware.Recoverer)
     server.Use(middleware.RealIP)
+    fmt.Println("Adicionando rotas")
     server.Get("/auth/github", loginController.Auth)
     server.Get("/docs/*", httpSwagger.Handler(
         httpSwagger.URL("/docs/doc.json"), //The url pointing to API definition
@@ -165,5 +172,6 @@ func main() {
         r.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
         r.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
     })
+    fmt.Println("Iniciando servidor")
     http.ListenAndServe(":3005", server)
 }

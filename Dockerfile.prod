@@ -22,8 +22,6 @@ WORKDIR /app
 # Copia o binário Go
 COPY --from=builder /app/go_gym_api /app/go_gym_api
 # Instala certificados CA na imagem final
-RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
 
 # Copia variáveis de ambiente
 COPY .env /app/.env
