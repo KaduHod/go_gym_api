@@ -18,7 +18,7 @@ type UserAPIToken struct {
 	Id        int64     `json:"id"`
 	UserId    int64     `json:"user_id"`
 	TokenName string     `json:"token_name"`
-	TokenHash string     `json:"-"` // Nunca deve ser exposto
+	TokenHash string     `json:"token_hash"` // Nunca deve ser exposto
 	CreatedAt time.Time  `json:"created_at"`
 	UpdatedAt time.Time  `json:"updated_at"`
 }

@@ -87,6 +87,8 @@ func (self UserController) CreateToken(w http.ResponseWriter, r *http.Request) {
         w.WriteHeader(http.StatusUnprocessableEntity)
         return
     }
+    tokens = append(tokens, apiToken)
+    go self.CacheService.SetTokensFromUser(user.Login ,tokens)
     data := map[string]string{
         "TokenName": tokenName,
         "TokenCreated": userToken,

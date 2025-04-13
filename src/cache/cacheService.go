@@ -1,6 +1,7 @@
 package cache
 
 import (
+	"KaduHod/muscles_api/src/core"
 	"KaduHod/muscles_api/src/database"
 	"KaduHod/muscles_api/src/utils"
 	"context"
@@ -118,4 +119,23 @@ func (self *CacheService) SetCacheFromRoute(r *http.Request , response interface
         return err
     }
     return nil
+}
+func (self *CacheService) SetTokensFromUser(login string, tokens []core.UserAPIToken) error {
+    key := "tokens:" + login
+    exp := time.Hour * 24
+    if err := self.set(key, tokens, exp); err != nil {
+        return err
+    }
+    return nil
+}
+func (self *CacheService) GetTokensFromUser(login string) ([]core.UserAPIToken, error) {
+    var tokens []core.UserAPIToken
+    key := "tokens:" + login
+    if err := self.get(key, &tokens); err != nil {
+        if err.Error() == "Cache miss" {
+            return tokens, nil
+        }
+        return nil, err
+    }
+    return tokens, nil
 }

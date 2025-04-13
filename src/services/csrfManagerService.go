@@ -5,7 +5,6 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/base64"
-	"fmt"
 	"net/http"
 	"sync"
 	"time"
@@ -109,12 +108,10 @@ func (m *CsrfService) validateToken(r *http.Request, token string) bool {
     if err != nil {
         return false
     }
-
 	// Verificar expiração
 	if time.Now().After(session.CsrfToken.Expiration) {
 		return false
 	}
-    fmt.Println(session, token)
 	// Comparar tokens
 	return session.CsrfToken.Token == token
 }

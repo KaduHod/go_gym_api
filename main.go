@@ -91,15 +91,16 @@ func main() {
     tokenRepository := repository.TokenRepository{Db: db}
     githubService := services.GitHubService{}
     sessionService := services.SessionService{Redis: redis}
+    cacheService := cache.CacheService{Redis: redis}
     tokenService := services.NewTokenService(&userRepository, &tokenRepository)
     csrfService := services.NewCsrfService(&sessionService)
     fmt.Println("Instanciado dependencias")
+    authLogger := services.NewLogService("auth.log", "AUTH")
     authService := auth.ApiAuthService{
         TokenRepository: &tokenRepository,
         TokenService: &tokenService,
-    }
-    cacheService := cache.CacheService{
-        Redis: redis,
+        Log: &authLogger,
+        CacheService: &cacheService,
     }
     controller := controllers.Controller{
         UserRepository: &userRepository,
@@ -135,8 +136,9 @@ func main() {
     server.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: log.New(logFile, "", log.LstdFlags)}))
     server.Use(middleware.GetHead)
     server.Use(middleware.Logger)
-    server.Use(middleware.Recoverer)
+    server.Use(middleware.RequestID)
     server.Use(middleware.RealIP)
+    server.Use(middleware.Recoverer)
     fmt.Println("Adicionando rotas")
     server.Get("/auth/github", loginController.Auth)
     server.Get("/docs/*", httpSwagger.Handler(
