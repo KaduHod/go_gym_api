@@ -83,4 +83,23 @@ func TestMusculoSkeletalRoutes(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, http.StatusOK, resp.StatusCode)
 	})
+
+
+	t.Run("ListExercises - Success", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", baseURL+"/exercises", nil)
+		req.Header.Add("Authorization", authToken)
+		resp, err := client.Do(req)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+	})
+
+	t.Run("ListExercisesAmm - Success ", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", baseURL+"/exercises/84", nil)
+		req.Header.Add("Authorization", authToken)
+		resp, err := client.Do(req)
+
+		assert.NoError(t, err)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+	})
 }
