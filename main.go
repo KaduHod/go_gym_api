@@ -89,6 +89,7 @@ func main() {
     ammRepository := repository.AmmRepository{Db: db}
     userRepository := repository.UserRepository{Db: db}
     tokenRepository := repository.TokenRepository{Db: db}
+    exerciseRepository := repository.ExerciseRepository{Db: db}
     githubService := services.GitHubService{}
     sessionService := services.SessionService{Redis: redis}
     cacheService := cache.CacheService{Redis: redis}
@@ -130,7 +131,10 @@ func main() {
         UserRepository: &userRepository,
         SessionService: &sessionService,
     }
-
+    exerciseController := controllers.ExerciseController{
+        Controller: controller,
+        ExerciseRepository: &exerciseRepository,
+    }
     fmt.Println("Criando controllers")
     server := chi.NewRouter()
     server.Use(middleware.RequestLogger(&middleware.DefaultLogFormatter{Logger: log.New(logFile, "", log.LstdFlags)}))
@@ -164,15 +168,17 @@ func main() {
     })
     server.Get("/info", controller.Info)
     server.Get("/dashboard", controller.Dashboard)
-    server.Group(func(r chi.Router) {
+    server.Route("/api/v1" ,func(r chi.Router) {
         r.Use(authService.Middleware)
         r.Use(cacheService.Middleware)
-        r.Get("/api/v1/muscles/groups", musculoSkeletalController.ListMuscleGroups)
-        r.Get("/api/v1/muscles/portions", musculoSkeletalController.ListMusclePortions)
-        r.Get("/api/v1/muscles/movement-map", musculoSkeletalController.ListAmm)
-        r.Get("/api/v1/muscles", musculoSkeletalController.ListMuscles)
-        r.Get("/api/v1/joints", musculoSkeletalController.ListJoints)
-        r.Get("/api/v1/movements", musculoSkeletalController.ListMoviments)
+        r.Get("/muscles/groups", musculoSkeletalController.ListMuscleGroups)
+        r.Get("/muscles/portions", musculoSkeletalController.ListMusclePortions)
+        r.Get("/muscles/movement-map", musculoSkeletalController.ListAmm)
+        r.Get("/muscles", musculoSkeletalController.ListMuscles)
+        r.Get("/joints", musculoSkeletalController.ListJoints)
+        r.Get("/movements", musculoSkeletalController.ListMoviments)
+        r.Get("/exercises", exerciseController.GetExercises)
+        r.Get("/exercises/{id}", exerciseController.GetExercise)
     })
     fmt.Println("Iniciando servidor")
     http.ListenAndServe(":3005", server)

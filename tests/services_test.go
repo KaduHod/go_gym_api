@@ -265,4 +265,17 @@ func TestRepositorys(t *testing.T) {
             t.Fatal(err)
         }
     })
+    exerciseRepository := repository.ExerciseRepository{Db: db}
+    t.Run("Exercise :: Get all exercises", func(t *testing.T) {
+        _, err := exerciseRepository.GetExercises()
+        if err != nil {
+            t.Fatal(err)
+        }
+    })
+    t.Run("Exercise :: Get details", func(t *testing.T) {
+        _, err := exerciseRepository.GetExerciseDetails(84)
+        if err != nil {
+            t.Fatal(err)
+        }
+    })
 }

@@ -2,7 +2,7 @@ services:
   go_gym_api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "3005:3005"
     env_file:
@@ -15,6 +15,7 @@ services:
       - ./src:/app/src
       - ./main.go:/app/main.go
       - ./docs:/app/docs
+      - ./tests:/app/tests
     networks:
       - gym
     restart: unless-stopped

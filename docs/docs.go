@@ -15,6 +15,146 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/exercises": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a list of all exercises with their information",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Musculoskeletal"
+                ],
+                "summary": "List all exercises",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/core.Exercise"
+                                            }
+                                        },
+                                        "metadata": {
+                                            "$ref": "#/definitions/controllers.MetaData"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/exercises/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get a list of all movements on the execution of the exercise",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Musculoskeletal"
+                ],
+                "summary": "List all exercises movements",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/core.Amm"
+                                            }
+                                        },
+                                        "metadata": {
+                                            "$ref": "#/definitions/controllers.MetaData"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.ResponseUnauthorized"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/controllers.ResponseDescription"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/joints": {
             "get": {
                 "security": [
@@ -491,6 +631,50 @@ const docTemplate = `{
                 }
             }
         },
+        "core.Amm": {
+            "type": "object",
+            "properties": {
+                "joint": {
+                    "type": "string"
+                },
+                "movement": {
+                    "type": "string"
+                },
+                "muscle_group": {
+                    "type": "string"
+                },
+                "muscle_portion": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "core.Exercise": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "info_link": {
+                    "description": "nullable",
+                    "type": "string"
+                },
+                "mappings": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/core.Amm"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "core.Joint": {
             "type": "object",
             "properties": {
@@ -564,7 +748,7 @@ const docTemplate = `{
     },
     "securityDefinitions": {
         "ApiKeyAuth": {
-            "description": "Type \"Bearer\" followed by a space tour Token.",
+            "description": "Type \"Bearer\" followed by a space and your Token.",
             "type": "apiKey",
             "name": "Authorization",
             "in": "header"
