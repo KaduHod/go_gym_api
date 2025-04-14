@@ -94,4 +94,4 @@ curl --location 'https://gymapi.kadu.tec.br/api/v1/muscles/groups' \
 
 ---
 
-Para suporte ou mais informações, entre em contato com a equipe de desenvolvimento.
+Para suporte ou mais informações, entre em contato comigo -> carlosjr.ribas@gmail.com.
