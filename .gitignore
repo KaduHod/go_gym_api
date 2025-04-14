@@ -2,6 +2,7 @@
 .DS_Store             # Mac
 .thumbs.db            # Windows
 desktop.ini           # Windows
+prod.md
 *.swp                 # Vim
 *.swo                 # Vim
 *~                    # Backup files
