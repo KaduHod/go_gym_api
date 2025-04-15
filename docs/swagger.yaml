@@ -120,6 +120,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:
@@ -159,6 +165,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:
@@ -198,6 +210,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:
@@ -237,6 +255,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:
@@ -276,6 +300,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:
@@ -315,6 +345,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:
@@ -372,6 +408,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:
@@ -411,6 +453,12 @@ paths:
                 metadata:
                   $ref: '#/definitions/controllers.MetaData'
               type: object
+        "304":
+          description: Not modified
+          headers:
+            ETag:
+              description: Entity tag for cache validation
+              type: string
         "401":
           description: Unauthorized
           schema:

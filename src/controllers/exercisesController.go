@@ -19,6 +19,8 @@ type ExerciseController struct {
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.Exercise,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized
@@ -38,6 +40,8 @@ func (self ExerciseController) GetExercises(w http.ResponseWriter, r *http.Reque
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.Amm,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized

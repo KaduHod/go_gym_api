@@ -58,6 +58,15 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -126,6 +135,15 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {
@@ -198,6 +216,15 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -266,6 +293,15 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {
@@ -338,6 +374,15 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -406,6 +451,15 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {
@@ -504,6 +558,15 @@ const docTemplate = `{
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -572,6 +635,15 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {

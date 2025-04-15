@@ -52,6 +52,15 @@
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -120,6 +129,15 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {
@@ -192,6 +210,15 @@
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -260,6 +287,15 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {
@@ -332,6 +368,15 @@
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -400,6 +445,15 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {
@@ -498,6 +552,15 @@
                             ]
                         }
                     },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
+                        }
+                    },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
@@ -566,6 +629,15 @@
                                     }
                                 }
                             ]
+                        }
+                    },
+                    "304": {
+                        "description": "Not modified",
+                        "headers": {
+                            "ETag": {
+                                "type": "string",
+                                "description": "Entity tag for cache validation"
+                            }
                         }
                     },
                     "401": {

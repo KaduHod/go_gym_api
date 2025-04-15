@@ -22,6 +22,8 @@ type MusculoSkeletalController struct {
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.MuscleGroup,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized
@@ -47,6 +49,8 @@ func (self MusculoSkeletalController) ListMuscleGroups(w http.ResponseWriter, r 
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.MusclePortion,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized
@@ -71,6 +75,8 @@ func (self MusculoSkeletalController) ListMusclePortions(w http.ResponseWriter, 
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.MuscleGroup,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized
@@ -96,6 +102,8 @@ func (self MusculoSkeletalController) ListMuscles(w http.ResponseWriter, r *http
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.Joint,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized
@@ -120,6 +128,8 @@ func (self MusculoSkeletalController) ListJoints(w http.ResponseWriter, r *http.
 // @Accept  json
 // @Produce  json
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.Movement,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized
@@ -148,6 +158,8 @@ func (self MusculoSkeletalController) ListMoviments(w http.ResponseWriter, r *ht
 // @Param joint query string false "Filter by joint name"
 // @Param movement query string false "Filter by movement name"
 // @Success 200 {object} controllers.ResponseDescription{data=[]core.MuscleMovementInfo,metadata=controllers.MetaData}
+// @Success 304 "Not modified"
+// @Header 304 {string} ETag "Entity tag for cache validation"
 // @Failure 500 {object} controllers.ResponseDescription{data=string}
 // @Security BearerAuth
 // @Failure 401 {object} controllers.ResponseUnauthorized
