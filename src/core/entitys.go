@@ -29,6 +29,12 @@ type UserAPIToken struct {
     CreatedAt time.Time  `json:"created_at"`
     UpdatedAt time.Time  `json:"updated_at"`
 }
+type ExerciseSimple struct {
+    Id          int64     `json:"id"`
+    Name        string  `json:"name"`
+    Description string  `json:"description"`
+    InfoLink    *string `json:"info_link,omitempty"` // nullable
+}
 type Exercise struct {
     Id          int64     `json:"id"`
     Name        string  `json:"name"`
