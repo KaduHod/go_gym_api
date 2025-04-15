@@ -53,10 +53,20 @@ func (self ExerciseController) GetExercise(w http.ResponseWriter, r *http.Reques
         self.InternalServerError(w, r, err)
         return
     }
+    exercise, err := self.ExerciseRepository.GetExercise(idInt)
+    if err != nil {
+        self.InternalServerError(w, r, err)
+        return
+    }
+    if exercise.Id == 0 {
+        self.SuccessResponse(w, r, exercise, 0)
+        return
+    }
     resources, err := self.ExerciseRepository.GetExerciseDetails(idInt)
     if err != nil {
         self.InternalServerError(w, r, err)
         return
     }
-    self.SuccessResponse(w, r, resources, len(resources))
+    exercise.Map = resources
+    self.SuccessResponse(w, r, exercise, len(exercise.Map))
 }

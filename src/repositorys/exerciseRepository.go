@@ -49,3 +49,14 @@ func (self ExerciseRepository) GetExerciseDetails(id int64) ([]core.Amm, error) 
     }
     return resources, nil
 }
+func (self ExerciseRepository) GetExercise(id int64) (core.Exercise, error) {
+    query := `SELECT id, name, description, info_link FROM exercise WHERE id = ?`
+    var resource core.Exercise
+    if err := self.Db.QueryRow(query, id).Scan(&resource.Id, &resource.Name, &resource.Description, &resource.InfoLink); err != nil {
+        if err == sql.ErrNoRows {
+            return resource, nil
+        }
+        return resource, err
+    }
+    return resource, nil
+}
