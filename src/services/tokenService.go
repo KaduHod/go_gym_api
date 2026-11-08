@@ -74,7 +74,6 @@ func (self *TokenService) GetUserFromToken(token string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	return string(userIdentBytes), nil
 }
 

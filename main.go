@@ -65,12 +65,6 @@ func Logger() Middleware {
 // @name Authorization
 // @description Type "Bearer" followed by a space and your Token.
 func main() {
-
-    fmt.Println("Preparando logs e ambiente")
-	logFile, err := os.OpenFile("/app/logs/server.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
-	if err != nil {
-		log.Fatalf("Erro ao abrir arquivo de log: %v", err)
-	}
     envFile := ".env"
     if len(os.Args) > 1 && os.Args[1] == "prod" {
         envFile = ".env.prod"
@@ -78,6 +72,11 @@ func main() {
     if err := godotenv.Load(envFile); err != nil {
         log.Fatal(err)
     }
+    fmt.Println("Preparando logs e ambiente")
+	logFile, err := os.OpenFile(os.Getenv("LOG_FILE_PATH") + "server.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("Erro ao abrir arquivo de log: %v", err)
+	}
     fmt.Println("Iniciando configurações do servidor")
     db := database.ConnetionMysql()
     defer db.Close()
@@ -181,5 +180,6 @@ func main() {
         r.Get("/exercises/{id}", exerciseController.GetExercise)
     })
     fmt.Println("Iniciando servidor")
+
     http.ListenAndServe(":3005", server)
 }
