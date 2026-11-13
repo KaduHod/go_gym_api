@@ -26,7 +26,8 @@ type ExerciseController struct {
 // @Failure 401 {object} controllers.ResponseUnauthorized
 // @Router /exercises [get]
 func (self ExerciseController) GetExercises(w http.ResponseWriter, r *http.Request) {
-    resources, err := self.ExerciseRepository.GetExercises()
+	search := r.URL.Query().Get("Search")
+    resources, err := self.ExerciseRepository.GetExercises(search)
     if err != nil {
         self.InternalServerError(w, r, err)
         return
