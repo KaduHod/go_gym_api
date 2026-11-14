@@ -23,13 +23,13 @@ func (self ExerciseRepository) GetExercises(search string) ([]core.Exercise, err
 			SELECT e.id, e.name, e.description, e.info_link
 			FROM exercise_search es
 			INNER JOIN exercise e ON e.id = es.exercise_id
-			WHERE MATCH(es.full_text) AGAINST(? IN NATURAL LANGUAGE MODE)
+			WHERE MATCH(es.full_text) AGAINST(? IN NATURAL LANGUAGE MODE) or e.name = ?
 			ORDER BY MATCH(es.full_text) AGAINST(? IN NATURAL LANGUAGE MODE) DESC
 			LIMIT 5
 		`
 		query = strings.ReplaceAll(query, "full_text", column)
 	}
-    rows, err := self.Db.Query(query, search, search)
+    rows, err := self.Db.Query(query, search, search, search)
     var resources []core.Exercise
     if err != nil {
         if err == sql.ErrNoRows {
