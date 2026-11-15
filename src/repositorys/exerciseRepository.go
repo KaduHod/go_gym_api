@@ -10,6 +10,7 @@ type ExerciseRepository struct {
 }
 func (self ExerciseRepository) GetExercises(search string) ([]core.Exercise, error) {
 	var query string
+	var args []any
 
 	if search == "" {
 		query = `SELECT id, name, description, info_link FROM exercise`
@@ -20,31 +21,32 @@ func (self ExerciseRepository) GetExercises(search string) ([]core.Exercise, err
 			column = "structures_text"
 		}
 		query = `
-			SELECT e.id, e.name, e.description, e.info_link
-			FROM exercise_search es
-			INNER JOIN exercise e ON e.id = es.exercise_id
-			WHERE MATCH(es.full_text) AGAINST(? IN NATURAL LANGUAGE MODE) or e.name = ?
-			ORDER BY MATCH(es.full_text) AGAINST(? IN NATURAL LANGUAGE MODE) DESC
-			LIMIT 5
+		SELECT e.id, e.name, e.description, e.info_link
+		FROM exercise_search es
+		INNER JOIN exercise e ON e.id = es.exercise_id
+		WHERE MATCH(es.full_text) AGAINST(? IN NATURAL LANGUAGE MODE) or e.name = ?
+		ORDER BY MATCH(es.full_text) AGAINST(? IN NATURAL LANGUAGE MODE) DESC
+		LIMIT 5
 		`
 		query = strings.ReplaceAll(query, "full_text", column)
+		args = []any{search, search, search}
 	}
-    rows, err := self.Db.Query(query, search, search, search)
-    var resources []core.Exercise
-    if err != nil {
-        if err == sql.ErrNoRows {
-            return resources, nil
-        }
-        return resources, err
-    }
-    for rows.Next() {
-        var resource core.Exercise
-        if err := rows.Scan(&resource.Id, &resource.Name, &resource.Description, &resource.InfoLink); err != nil {
-            return nil, err
-        }
-        resources = append(resources, resource)
-    }
-    return resources, nil
+
+	rows, err := self.Db.Query(query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var resources []core.Exercise
+	for rows.Next() {
+		var resource core.Exercise
+		if err := rows.Scan(&resource.Id, &resource.Name, &resource.Description, &resource.InfoLink); err != nil {
+			return nil, err
+		}
+		resources = append(resources, resource)
+	}
+	return resources, rows.Err()
 }
 func (self ExerciseRepository) GetExerciseDetails(id int64) ([]core.Amm, error) {
     query := `SELECT ea.role, m.name movement, mg.name muscle_group,  mp.name muscle_portion, a.name joint FROM exercise_amm ea
