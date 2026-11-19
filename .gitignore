@@ -40,6 +40,8 @@ __pycache__/          # Python cache
 /go.mod               # Go mod (pode querer versionar, mas ignore se não for o caso)
 *.exe                 # Executáveis do Go
 *.test                # Binários de teste
+tests/*                # Binários de teste
+tmp/*
 *.prof                # Profiles
 
 ### 🔹 Python
@@ -99,3 +101,8 @@ docker-compose.override.yml  # Overrides locais
 *.fig
 *.ai
 *.psd
+server.log
+node_modules
+.env
+.env.prod
+package-lock.json
